@@ -1,30 +1,23 @@
 
-import com.hp.hpl.jena.util.FileUtils;
-import com.sun.corba.se.spi.oa.OAInvocationInfo;
-import edu.stanford.smi.protegex.owl.inference.reasoner.exception.ProtegeReasonerException;
-import edu.stanford.smi.protegex.owl.model.OWLCardinality;
-import edu.stanford.smi.protegex.owl.model.OWLMaxCardinality;
-import edu.stanford.smi.protegex.owl.model.OWLObjectProperty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+
+import com.hp.hpl.jena.util.FileUtils;
 
 import edu.stanford.smi.protege.exception.OntologyLoadException;
 import edu.stanford.smi.protegex.owl.ProtegeOWL;
 import edu.stanford.smi.protegex.owl.inference.pellet.ProtegePelletJenaReasoner;
 import edu.stanford.smi.protegex.owl.inference.protegeowl.ReasonerManager;
 import edu.stanford.smi.protegex.owl.inference.reasoner.ProtegeReasoner;
+import edu.stanford.smi.protegex.owl.inference.reasoner.exception.ProtegeReasonerException;
 import edu.stanford.smi.protegex.owl.jena.JenaOWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLIndividual;
 import edu.stanford.smi.protegex.owl.model.OWLModel;
 import edu.stanford.smi.protegex.owl.model.OWLNamedClass;
-import edu.stanford.smi.protegex.owl.model.RDFSNamedClass;
-import edu.stanford.smi.protegex.owl.model.impl.DefaultOWLNamedClass;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import edu.stanford.smi.protegex.owl.model.OWLObjectProperty;
 
 /**
  * 
