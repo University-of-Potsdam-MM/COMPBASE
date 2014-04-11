@@ -2,3 +2,6 @@
 	path = competence
 	url = https://github.com/uzuzjmd/competence
 	branch = master
+[submodule "MoodleRest"]
+	path = MoodleRest
+	url = https://github.com/uzuzjmd/MoodleRest
