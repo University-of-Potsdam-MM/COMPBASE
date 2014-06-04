@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>uzuzjmd.competence</groupId>
+	<groupId>de.unipotsdam.ontologypersistence</groupId>
 	<artifactId>competence-database</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>${project.artifactId}</name>
-	<description>A RDf based competence database </description>
+	<description>A persistence model for RDF based ontologies</description>
 	<inceptionYear>2014</inceptionYear>
 	<licenses>
 		<!-- <license> -->
