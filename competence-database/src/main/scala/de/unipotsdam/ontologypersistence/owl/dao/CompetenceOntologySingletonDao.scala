@@ -10,8 +10,8 @@ import de.unipotsdam.ontologypersistence.owl.access.OntologyAccess
 import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 
-abstract case class CompetenceOntologySingletonDao(comp: OntologyManager, val compOntClass: OntClasses, val identifier: String = null) extends Dao(comp) {
-  val util = comp.getUtil()
+abstract case class CompetenceOntologySingletonDao(ontManager: OntologyManager, val compOntClass: OntClasses, val identifier: String = null) extends Dao(ontManager) {
+  val util = ontManager.getUtil()
 
   def persist(more: Boolean): OntResult = {
     var result: OntResult = null
@@ -31,7 +31,7 @@ abstract case class CompetenceOntologySingletonDao(comp: OntologyManager, val co
    */
   @Override
   def getPropertyPair(key: String): (Property, Statement) = {
-    val literal = comp.getM().createProperty(OntologyAccess.encode(key));
+    val literal = ontManager.getM().createProperty(OntologyAccess.encode(key));
     val prop: Statement = persist(false).getOntclass().getProperty(literal);
     return (literal, prop)
   }

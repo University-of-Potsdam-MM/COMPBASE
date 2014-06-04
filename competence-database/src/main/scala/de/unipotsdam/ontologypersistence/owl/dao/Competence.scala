@@ -4,20 +4,20 @@ import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 import de.unipotsdam.ontologypersistence.owl.ontology.OntObjectProperties
 
-class Competence(compManager: OntologyManager, identifier: String, val definition: String = null, val compulsory: java.lang.Boolean = null) extends CompetenceOntologySingletonDao(compManager, OntClasses.Competence, identifier) {
+class Competence(ontManager: OntologyManager, identifier: String, val definition: String = null, val compulsory: java.lang.Boolean = null) extends CompetenceOntologySingletonDao(ontManager, OntClasses.Competence, identifier) {
 
   def DEFINITION = "definition"
   def COMPULSORY = "compulsory"
 
   @Override
   protected def persistMore() {
-    val competenceRoot = new CompetenceInstance(comp)
+    val competenceRoot = new CompetenceInstance(ontManager)
     persist(false).getOntclass().addSuperClass(competenceRoot.persist(false).getOntclass())
   }
 
   @Override
   def getFullDao(): Competence = {
-    return new Competence(compManager, identifier, getDataField(DEFINITION), getDataFieldBoolean(COMPULSORY))
+    return new Competence(ontManager, identifier, getDataField(DEFINITION), getDataFieldBoolean(COMPULSORY))
   }
 
   def addRequiredCompetence(competence: Competence) {

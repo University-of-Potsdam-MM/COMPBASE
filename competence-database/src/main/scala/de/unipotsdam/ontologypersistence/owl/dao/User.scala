@@ -5,7 +5,7 @@ import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 import de.unipotsdam.ontologypersistence.owl.ontology.OntObjectProperties
 import de.unipotsdam.ontologypersistence.owl.queries.OntologyQueries
 
-case class User(comp: OntologyManager, val name: String, val role: Role = null, val courseContext: CourseContext = null, val readableName: String = null) extends CompetenceOntologyDao(comp, OntClasses.User, name) {
+case class User(ontManager: OntologyManager, val name: String, val role: Role = null, val courseContext: CourseContext = null, val readableName: String = null) extends CompetenceOntologyDao(ontManager, OntClasses.User, name) {
 
   def NAME = "name"
 
@@ -32,14 +32,14 @@ case class User(comp: OntologyManager, val name: String, val role: Role = null, 
 
   @Override
   def getFullDao(): User = {
-    val teacherRole = new TeacherRole(comp)
-    val queries = new OntologyQueries(comp.getM())
+    val teacherRole = new TeacherRole(ontManager)
+    val queries = new OntologyQueries(ontManager.getM())
     val courseContext2 = getAssociatedStandardDaosAsRange(OntObjectProperties.belongsToCourseContext, classOf[CourseContext]).map(x => x.getFullDao.asInstanceOf[CourseContext]).head;
     val readableName = getDataField(NAME)
     if (hasEdge(teacherRole, OntObjectProperties.RoleOf)) {
-      return new User(comp, name, teacherRole, courseContext2, readableName)
+      return new User(ontManager, name, teacherRole, courseContext2, readableName)
     } else {
-      return new User(comp, name, new StudentRole(comp), courseContext2, readableName)
+      return new User(ontManager, name, new StudentRole(ontManager), courseContext2, readableName)
     }
   }
 

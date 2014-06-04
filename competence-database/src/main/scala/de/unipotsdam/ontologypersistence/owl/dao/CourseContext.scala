@@ -5,7 +5,7 @@ import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 import de.unipotsdam.ontologypersistence.owl.ontology.OntObjectProperties
 
-case class CourseContext(comp: OntologyManager, var name: String) extends CompetenceOntologyDao(comp, OntClasses.CourseContext, OntologyAccessScala.convertMoodleIdToName(name)) {
+case class CourseContext(ontManager: OntologyManager, var name: String) extends CompetenceOntologyDao(ontManager, OntClasses.CourseContext, OntologyAccessScala.convertMoodleIdToName(name)) {
   name = OntologyAccessScala.convertMoodleIdToName(name)
 
   @Override

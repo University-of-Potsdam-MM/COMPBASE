@@ -8,14 +8,14 @@ import de.unipotsdam.ontologypersistence.owl.access.OntologyAccess
 import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 
-abstract class CompetenceOntologyDao(comp: OntologyManager, compOntClass: OntClasses, val identifier: String) extends Dao(comp) {
-  val util = comp.getUtil()
+abstract class CompetenceOntologyDao(ontManager: OntologyManager, ontologyClass: OntClasses, val identifier: String) extends Dao(ontManager) {
+  val util = ontManager.getUtil()
   val identifierBeforeParsing = identifier
   val encodedstring = identifier.trim().replaceAll("[^a-zA-ZäöüÄÖÜß1-9]", "_").replaceAll("[\u0000-\u001f]", "").replaceAll("\\.", "__").replaceAll("[\n\r]", "").replaceAll("[\n]", "").replaceAll("_", "");
 
   @Override
   def getPropertyPair(key: String): (Property, Statement) = {
-    val literal = comp.getM().createProperty(OntologyAccess.encode(key));
+    val literal = ontManager.getM().createProperty(OntologyAccess.encode(key));
     val prop: Statement = createIndividual.getProperty(literal);
     return (literal, prop)
   }
@@ -42,7 +42,7 @@ abstract class CompetenceOntologyDao(comp: OntologyManager, compOntClass: OntCla
   }
 
   def createIndividual: Individual = {
-    val ontClass = util.createOntClass(compOntClass)
+    val ontClass = util.createOntClass(ontologyClass)
 
     return util.createIndividualForString(ontClass, encodedstring)
   }

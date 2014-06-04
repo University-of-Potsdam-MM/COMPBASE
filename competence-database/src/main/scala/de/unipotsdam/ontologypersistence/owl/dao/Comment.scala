@@ -4,7 +4,7 @@ import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 import de.unipotsdam.ontologypersistence.owl.ontology.OntObjectProperties
 
-case class Comment(comp: OntologyManager, val text: String, val creator: User = null, val created: java.lang.Long = null, val textReadable : String = null) extends CompetenceOntologyDao(comp, OntClasses.Comment, text) {
+case class Comment(ontManager: OntologyManager, val text: String, val creator: User = null, val created: java.lang.Long = null, val textReadable : String = null) extends CompetenceOntologyDao(ontManager, OntClasses.Comment, text) {
 
   def DATECRATED = "datecreated"
   def TEXT = "text"
@@ -31,6 +31,6 @@ case class Comment(comp: OntologyManager, val text: String, val creator: User = 
     val creatorNew = getAssociatedStandardDaosAsDomain(OntObjectProperties.UserOfComment, classOf[User]).head
     val textNew = getDataField(TEXT)
     val dateCreatedNew = getDataFieldLong(DATECRATED)
-    return new Comment(comp, text, creatorNew, dateCreatedNew, textNew)
+    return new Comment(ontManager, text, creatorNew, dateCreatedNew, textNew)
   }
 }

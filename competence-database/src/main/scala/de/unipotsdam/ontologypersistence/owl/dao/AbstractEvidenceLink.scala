@@ -5,7 +5,7 @@ import de.unipotsdam.ontologypersistence.owl.ontology.OntClasses
 import de.unipotsdam.ontologypersistence.owl.ontology.OntObjectProperties
 
 case class AbstractEvidenceLink(
-  val comp: OntologyManager,
+  val ontManager: OntologyManager,
   val identifier2: String,
   val creator: User = null,
   val linkedUser: User = null,
@@ -14,7 +14,7 @@ case class AbstractEvidenceLink(
   val evidenceActivity: EvidenceActivity = null,
   val dateCreated: java.lang.Long = null,
   val isValidated: java.lang.Boolean = null,
-  val competence: Competence = null) extends CompetenceOntologyDao(comp, OntClasses.AbstractEvidenceLink, identifier2) {
+  val competence: Competence = null) extends CompetenceOntologyDao(ontManager, OntClasses.AbstractEvidenceLink, identifier2) {
 
   def CREATED = "datecreated"
   def ISVALIDATED = "isValidated"
@@ -60,7 +60,7 @@ case class AbstractEvidenceLink(
     val creator = getAssociatedStandardDaosAsRange(OntObjectProperties.createdBy, classOf[User]).head
     val courseContext = getAssociatedStandardDaosAsRange(OntObjectProperties.LinkOfCourseContext, classOf[CourseContext])
     val evidenceActivity = getAssociatedStandardDaosAsDomain(OntObjectProperties.ActivityOf, classOf[EvidenceActivity])
-    return new AbstractEvidenceLink(comp, identifier, creator.getFullDao, null, null, comments, null, getDataFieldLong(CREATED), getDataFieldBoolean(ISVALIDATED), null)
+    return new AbstractEvidenceLink(ontManager, identifier, creator.getFullDao, null, null, comments, null, getDataFieldLong(CREATED), getDataFieldBoolean(ISVALIDATED), null)
   }
 
   def getAllLinkedUsers(): List[User] = {

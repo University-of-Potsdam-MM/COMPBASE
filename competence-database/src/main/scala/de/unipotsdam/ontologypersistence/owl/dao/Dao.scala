@@ -11,7 +11,7 @@ import de.unipotsdam.ontologypersistence.owl.queries.OntologyQueries
 import uzuzjmd.scalahacks.ScalaHacks
 import uzuzjmd.scalahacks.ScalaHacksInScala
 
-abstract class Dao(comp: OntologyManager) {
+abstract class Dao(ontManager: OntologyManager) {
   def createIndividual: Individual;
   def getId: String;
   def getPropertyPair(key: String): (Property, Statement)
@@ -24,32 +24,32 @@ abstract class Dao(comp: OntologyManager) {
   def createEdgeWith(edgeType: OntObjectProperties, range: Dao) {
     val domainIndividual = createIndividual
     val rangeIndividual = range.createIndividual
-    comp.getUtil().createObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
+    ontManager.getUtil().createObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
   }
 
   def createEdgeWith(domain: Dao, edgeType: OntObjectProperties) {
     val domainIndividual = domain.createIndividual
     val rangeIndividual = createIndividual
-    comp.getUtil().createObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
+    ontManager.getUtil().createObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
   }
 
   def deleteEdgeWith(domain: Dao, edgeType: OntObjectProperties) {
     val domainIndividual = domain.createIndividual
     val rangeIndividual = createIndividual
-    comp.getUtil().deleteObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
+    ontManager.getUtil().deleteObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
   }
 
   def deleteEdge(edgeType: OntObjectProperties, range: Dao) {
     val domainIndividual = createIndividual
     val rangeIndividual = range.createIndividual
-    comp.getUtil().deleteObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
+    ontManager.getUtil().deleteObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
   }
 
   def hasEdge(edgeType: OntObjectProperties, range: Dao): Boolean = {
     if (this.exists && range.exists) {
       val domainIndividual = createIndividual
       val rangeIndividual = range.createIndividual
-      val result = comp.getUtil().existsObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
+      val result = ontManager.getUtil().existsObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
       return result
     } else { return false }
   }
@@ -58,7 +58,7 @@ abstract class Dao(comp: OntologyManager) {
     if (this.exists && domain.exists) {
       val domainIndividual = domain.createIndividual
       val rangeIndividual = createIndividual
-      val result = comp.getUtil().existsObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
+      val result = ontManager.getUtil().existsObjectPropertyWithIndividual(domainIndividual, rangeIndividual, edgeType)
       return result
     } else { return false }
   }
@@ -72,7 +72,7 @@ abstract class Dao(comp: OntologyManager) {
 
   def addDataField(key: String, value: Object) {
     deleteDataField(key)
-    val literal = comp.getM().createProperty(OntologyAccess.encode(key));
+    val literal = ontManager.getM().createProperty(OntologyAccess.encode(key));
     //    createIndividual.removeAll(literal)
     createIndividual.addLiteral(literal, value);
   }
@@ -111,7 +111,7 @@ abstract class Dao(comp: OntologyManager) {
   def deleteDataField(key: String) = {
     val tmpResult = getPropertyPair(key)
     if (tmpResult._2 != null) {
-      comp.getM().remove(tmpResult._2);
+      ontManager.getM().remove(tmpResult._2);
     }
   }
 
@@ -122,14 +122,14 @@ abstract class Dao(comp: OntologyManager) {
   private def getAssociatedIndividuals(edgeType: OntObjectProperties, range: Dao): List[Individual] = {
     val hacks = new ScalaHacks;
     val individualDummy = hacks.getIndividualArray()
-    val queries = new OntologyQueries(comp.getM())
+    val queries = new OntologyQueries(ontManager.getM())
     return queries.getRelatedIndividuals(edgeType, range.getId).toArray(individualDummy).toList
   }
 
   private def getAssociatedIndividuals(domain: Dao, edgeType: OntObjectProperties): List[Individual] = {
     val hacks = new ScalaHacks;
     val individualDummy = hacks.getIndividualArray()
-    val queries = new OntologyQueries(comp.getM())
+    val queries = new OntologyQueries(ontManager.getM())
     return queries.getRelatedIndividualsDomainGiven(domain.getId, edgeType).toArray(individualDummy).toList
   }
 
@@ -138,7 +138,7 @@ abstract class Dao(comp: OntologyManager) {
    */
   protected def getAssociatedStandardDaosAsDomain[T <: CompetenceOntologyDao](edgeType: OntObjectProperties, clazz: java.lang.Class[T]): List[T] = {
     val assocIndividuals = getAssociatedIndividuals(edgeType, this)
-    val result = assocIndividuals.map(x => ScalaHacksInScala.instantiateDao(clazz)(comp, x.getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
+    val result = assocIndividuals.map(x => ScalaHacksInScala.instantiateDao(clazz)(ontManager, x.getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
     return result.asInstanceOf[List[T]]
   }
 
@@ -147,7 +147,7 @@ abstract class Dao(comp: OntologyManager) {
    */
   protected def getAssociatedSingletonDaosAsDomain[T <: CompetenceOntologySingletonDao](edgeType: OntObjectProperties, clazz: java.lang.Class[T]): List[T] = {
     val assocIndividuals = getAssociatedIndividuals(edgeType, this)
-    val result = assocIndividuals.map(x => ScalaHacksInScala.instantiateDao(clazz)(comp, x.getOntClass().getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
+    val result = assocIndividuals.map(x => ScalaHacksInScala.instantiateDao(clazz)(ontManager, x.getOntClass().getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
     return result.asInstanceOf[List[T]]
   }
 
@@ -156,7 +156,7 @@ abstract class Dao(comp: OntologyManager) {
    */
   protected def getAssociatedStandardDaosAsRange[T <: CompetenceOntologyDao](edgeType: OntObjectProperties, clazz: java.lang.Class[T]): List[T] = {
     val ontClasses = getAssociatedIndividuals(this, edgeType)
-    val result = ontClasses.map(x => ScalaHacksInScala.instantiateDao(clazz)(comp, x.getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
+    val result = ontClasses.map(x => ScalaHacksInScala.instantiateDao(clazz)(ontManager, x.getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
     return result.asInstanceOf[List[T]]
   }
 
@@ -165,7 +165,7 @@ abstract class Dao(comp: OntologyManager) {
    */
   protected def getAssociatedSingletonDaosAsRange[T <: CompetenceOntologySingletonDao](edgeType: OntObjectProperties, clazz: java.lang.Class[T]): List[T] = {
     val ontClasses = getAssociatedIndividuals(this, edgeType)
-    val result = ontClasses.map(x => ScalaHacksInScala.instantiateDao(clazz)(comp, x.getOntClass().getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
+    val result = ontClasses.map(x => ScalaHacksInScala.instantiateDao(clazz)(ontManager, x.getOntClass().getLocalName()).asInstanceOf[T]).map(x => x.getFullDao)
     return result.asInstanceOf[List[T]]
   }
 
