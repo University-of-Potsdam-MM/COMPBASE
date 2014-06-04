@@ -7,7 +7,7 @@ public class MagicStrings {
 														// might be hardcoded
 														// somewhere
 	public static final String TDBLocation = "tdb2";
-	public static final String TDBLocationPath = "C:/dev/scalaworkspace/Wissensmodellierung/competence-database/tdb2";
+	public static final String TDBLocationPath = "/Users/tobias/Documents/Java Developement/Wissensmodellierung/competence-database/tdb2";
 	// public static final String ONTOLOGYFORMAT = "TURTLE";
 	public static final String ONTOLOGYFORMAT = "RDF/XML";
 	// public static final String ONTOLOGYFORMAT = "RDF/XML-ABBREV";
@@ -17,7 +17,6 @@ public class MagicStrings {
 	// public static final String RULESFILE =
 	// "C:/dev/scalaworkspace/Wissensmodellierung/comptetence-main/src/resources/competence.rules";
 	public static final String SINGLETONPREFIX = "I";
-	public static final String CSVLOCATION = "C:/dev/scalaworkspace/Wissensmodellierung/competence-database/src/main/scala/resources/kompetenzen_moodle_utf8.csv";
 	public static final String MOODLEURL = "http://localhost/moodle/";
 	public static final String RESTURL = "http://localhost:8083";
 	public static final String RESTURLCompetence = "http://localhost:8084";
