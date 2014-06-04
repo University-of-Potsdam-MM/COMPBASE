@@ -513,51 +513,6 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>SoapClient</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>SoapClient</finalName>
-							<archive>
-								<manifest>
-									<mainClass>uzuzjmd.competence.main.SoapClient</mainClass>
-								</manifest>
-							</archive>
-						</configuration>
-					</execution>
-					<execution>
-						<id>SoapServer</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>TestServer</finalName>
-							<archive>
-								<manifest>
-									<mainClass>uzuzjmd.competence.main.SoapServer</mainClass>
-								</manifest>
-							</archive>
-						</configuration>
-					</execution>
-					<execution>
-						<id>RestServer</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>RestServer</finalName>
-							<archive>
-								<manifest>
-									<mainClass>uzuzjmd.competence.main.RestServer</mainClass>
-								</manifest>
-							</archive>
-						</configuration>
-					</execution>
-					<execution>
 						<id>FusekiServer</id>
 						<phase>package</phase>
 						<goals>
@@ -568,21 +523,6 @@
 							<archive>
 								<manifest>
 									<mainClass>uzuzjmd.competence.main.FusekiServer</mainClass>
-								</manifest>
-							</archive>
-						</configuration>
-					</execution>
-					<execution>
-						<id>CSVImporter</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>CSVImporter</finalName>
-							<archive>
-								<manifest>
-									<mainClass>uzuzjmd.competence.main.CompetenceImporter</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

@@ -8,7 +8,6 @@ import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import uzuzjmd.competence.owl.access.CompFileUtil
-import uzuzjmd.competence.main.CompetenceImporter
 import uzuzjmd.competence.owl.access.CompOntologyManager
 import uzuzjmd.competence.owl.access.MagicStrings
 

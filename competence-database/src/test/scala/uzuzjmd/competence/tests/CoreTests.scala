@@ -5,7 +5,6 @@ import org.junit.AfterClass
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
-import uzuzjmd.competence.mapper.gui.Ont2CompetenceTree
 import uzuzjmd.competence.owl.access.CompFileUtil
 import uzuzjmd.competence.owl.access.CompOntologyManager
 import uzuzjmd.competence.owl.dao.StudentRole
@@ -24,9 +23,7 @@ import uzuzjmd.competence.owl.dao.StudentRole
 import uzuzjmd.competence.owl.dao.CourseContext
 import uzuzjmd.competence.owl.dao.TeacherRole
 import uzuzjmd.competence.owl.dao.Competence
-import uzuzjmd.competence.mapper.gui.Ont2CompetenceLinkMap
 import uzuzjmd.competence.owl.dao.AbstractEvidenceLink
-import uzuzjmd.competence.mapper.gui.Ont2ProgressMap
 import uzuzjmd.competence.owl.dao.CourseContext
 
 @RunWith(classOf[JUnitRunner])
@@ -48,48 +45,6 @@ class CoreTests extends FunSuite with ShouldMatchers {
     user.delete
     coursecontext.delete
     compOntManag.close()
-  }
-
-  test("The CompetenceTree should not be empty") {
-    val compOntManag = new CompOntologyManager()
-
-    compOntManag.begin()
-    compOntManag.getM().validate()
-    compOntManag.close()
-
-    val mapper = new Ont2CompetenceTree(compOntManag, List.empty.asJava, List.empty.asJava, "4", false)
-    val competenceTree = mapper.getComptenceTree
-    competenceTree should not be ('empty)
-
-  }
-
-  test("The filtered CompetenceTree should not be empty") {
-    val compOntManag = new CompOntologyManager()
-
-    compOntManag.begin()
-    compOntManag.getM().validate()
-    compOntManag.close()
-
-    val catchwords = "Kooperation" :: "Diagnostik" :: List.empty
-    val operators = "bewerten" :: "kooperieren" :: List.empty
-    val mapper = new Ont2CompetenceTree(compOntManag, catchwords.asJava, operators.asJava, "4", false)
-    val competenceTree = mapper.getComptenceTree
-    competenceTree should not be ('empty)
-
-  }
-
-  test("the operator tree should not be empty") {
-    val compOntManag = new CompOntologyManager()
-    val mapper = new Ont2CompetenceTree(compOntManag, List.empty.asJava, List.empty.asJava, "4", false)
-    val result = mapper.getOperatorXMLTree
-    result should not be ('empty)
-  }
-
-  test("the catchword tree should not be empty") {
-    val compOntManag = new CompOntologyManager()
-    val mapper = new Ont2CompetenceTree(compOntManag, List.empty.asJava, List.empty.asJava, "4", false)
-    val result = mapper.getCatchwordXMLTree
-    result should not be ('empty)
   }
 
   test("the singletondao should persist without error") {
@@ -209,44 +164,6 @@ class CoreTests extends FunSuite with ShouldMatchers {
     //    linkedUser.equals(userstudent) should not be false
     link.delete
 
-    compOntManag.close()
-    showResult
-  }
-
-  test("the competencelinksmap should not be empty") {
-    val compOntManag = new CompOntologyManager()
-    compOntManag.begin()
-    val linkId = "hellolinkId"
-    val studentRole = new StudentRole(compOntManag)
-    val coursecontext = new CourseContext(compOntManag, "2")
-    val userstudent = new User(compOntManag, "student meäää 10AA", studentRole, coursecontext, "student meäää 10AA")
-    val link = createAbstract(compOntManag, linkId, userstudent)
-    compOntManag.close()
-    val mapper = new Ont2CompetenceLinkMap(compOntManag, "student meäää 10AA")
-    mapper.getCompetenceLinkMap.getMapUserCompetenceLinks().entrySet() should not be ('empty)
-    //    compOntManag.begin()
-    //    link.delete
-    //    compOntManag.close()
-    link.delete
-    showResult
-  }
-
-  test("progresbarmap should not be empty") {
-    val compOntManag = new CompOntologyManager()
-    compOntManag.begin()
-    val linkId = "hellolinkId"
-    val studentRole = new StudentRole(compOntManag)
-    val coursecontext = new CourseContext(compOntManag, "2")
-    val userstudent = new User(compOntManag, "student meäää 10AA", studentRole, coursecontext, "student meäää 10AA")
-    val link = createAbstract(compOntManag, linkId, userstudent)
-    compOntManag.close()
-    compOntManag.begin()
-    val competenceList = new Competence(compOntManag, "Die Lehramtsanwärter kooperieren mit Kolleginnen und Kollegen bei der  Erarbeitung von Beratung/Empfehlung") :: Nil
-    val competenceListString = competenceList.map(x => x.getFullDao.definition).asJava
-    val mapper = new Ont2ProgressMap(compOntManag, coursecontext.name, competenceListString)
-    mapper.getProgressMap() should not be null
-    mapper.getProgressMap().entrySet() should not be ('empty)
-    link.delete
     compOntManag.close()
     showResult
   }
