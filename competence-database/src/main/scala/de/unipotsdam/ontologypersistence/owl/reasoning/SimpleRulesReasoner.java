@@ -44,9 +44,9 @@ public class SimpleRulesReasoner {
 	}
 
 	public synchronized Model reason() {
-		InfModel inf = ModelFactory.createInfModel(reasoner, manager.getM());
-		manager.getM().validate();
-		manager.getM().add(inf.getDeductionsModel());
+		InfModel inf = ModelFactory.createInfModel(reasoner, manager.getOntModel());
+		manager.getOntModel().validate();
+		manager.getOntModel().add(inf.getDeductionsModel());
 		if (!inf.getDeductionsModel().isEmpty()) {
 			logger.debug("RulesReasoner * * =>");
 			inf.getDeductionsModel().write(logStream, "N-TRIPLE", "comp:");

@@ -11,6 +11,8 @@ import de.unipotsdam.ontologypersistence.owl.queries.OntologyQueries
 import uzuzjmd.scalahacks.ScalaHacks
 import uzuzjmd.scalahacks.ScalaHacksInScala
 
+
+// TODO get rid of competence ontology stuff
 abstract class Dao(ontManager: OntologyManager) {
   def createIndividual: Individual;
   def getId: String;
@@ -72,7 +74,7 @@ abstract class Dao(ontManager: OntologyManager) {
 
   def addDataField(key: String, value: Object) {
     deleteDataField(key)
-    val literal = ontManager.getM().createProperty(OntologyAccess.encode(key));
+    val literal = ontManager.getOntModel().createProperty(OntologyAccess.encode(key));
     //    createIndividual.removeAll(literal)
     createIndividual.addLiteral(literal, value);
   }
@@ -111,7 +113,7 @@ abstract class Dao(ontManager: OntologyManager) {
   def deleteDataField(key: String) = {
     val tmpResult = getPropertyPair(key)
     if (tmpResult._2 != null) {
-      ontManager.getM().remove(tmpResult._2);
+      ontManager.getOntModel().remove(tmpResult._2);
     }
   }
 
@@ -122,14 +124,14 @@ abstract class Dao(ontManager: OntologyManager) {
   private def getAssociatedIndividuals(edgeType: OntObjectProperties, range: Dao): List[Individual] = {
     val hacks = new ScalaHacks;
     val individualDummy = hacks.getIndividualArray()
-    val queries = new OntologyQueries(ontManager.getM())
+    val queries = new OntologyQueries(ontManager.getOntModel())
     return queries.getRelatedIndividuals(edgeType, range.getId).toArray(individualDummy).toList
   }
 
   private def getAssociatedIndividuals(domain: Dao, edgeType: OntObjectProperties): List[Individual] = {
     val hacks = new ScalaHacks;
     val individualDummy = hacks.getIndividualArray()
-    val queries = new OntologyQueries(ontManager.getM())
+    val queries = new OntologyQueries(ontManager.getOntModel())
     return queries.getRelatedIndividualsDomainGiven(domain.getId, edgeType).toArray(individualDummy).toList
   }
 

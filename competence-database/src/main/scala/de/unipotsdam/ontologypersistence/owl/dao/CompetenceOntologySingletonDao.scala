@@ -31,7 +31,7 @@ abstract case class CompetenceOntologySingletonDao(ontManager: OntologyManager, 
    */
   @Override
   def getPropertyPair(key: String): (Property, Statement) = {
-    val literal = ontManager.getM().createProperty(OntologyAccess.encode(key));
+    val literal = ontManager.getOntModel().createProperty(OntologyAccess.encode(key));
     val prop: Statement = persist(false).getOntclass().getProperty(literal);
     return (literal, prop)
   }

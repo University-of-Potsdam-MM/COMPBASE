@@ -23,7 +23,7 @@ public class OntologyAccess {
 	static final Logger logger = LogManager.getLogger(OntologyAccess.class.getName());
 	private FileUtil fileUtil;
 
-	private OntologyManager manager;
+	private OntologyManager ontManager;
 	private OntologyQueries queries;
 
 	/**
@@ -31,12 +31,12 @@ public class OntologyAccess {
 	 * 
 	 * @param m
 	 * @param queries
-	 * @param compOntologyManager
+	 * @param ontologyManager
 	 */
-	public OntologyAccess(OntModel m, OntologyQueries queries, OntologyManager compOntologyManager) {
+	public OntologyAccess(OntModel m, OntologyQueries queries, OntologyManager ontologyManager) {
 		this.queries = queries;
 		this.fileUtil = new FileUtil(m);
-		this.manager = compOntologyManager;
+		this.ontManager = ontologyManager;
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class OntologyAccess {
 	 * @return
 	 */
 	public Individual createIndividualForString(OntClass ontClass, String individualName) {
-		return manager.getM().createIndividual(encode(individualName), ontClass);
+		return ontManager.getOntModel().createIndividual(encode(individualName), ontClass);
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class OntologyAccess {
 	 */
 	public Individual createIndividualForStringWithDefinition(OntClass ontClass, String individualName, String definition) {
 
-		Individual individual = manager.getM().createIndividual(encode(individualName), ontClass);
-		individual.addLiteral(manager.getM().createProperty("definition"), definition);
+		Individual individual = ontManager.getOntModel().createIndividual(encode(individualName), ontClass);
+		individual.addLiteral(ontManager.getOntModel().createProperty("definition"), definition);
 		return individual;
 	}
 
@@ -88,7 +88,7 @@ public class OntologyAccess {
 	 */
 	private ObjectProperty createObjectProperty(OntClass domain, OntClass range, String propertyName) {
 
-		ObjectProperty property = manager.getM().createObjectProperty(encode(propertyName));
+		ObjectProperty property = ontManager.getOntModel().createObjectProperty(encode(propertyName));
 		property.setDomain(domain);
 		property.setRange(range);
 		return property;
@@ -99,11 +99,11 @@ public class OntologyAccess {
 	 * 
 	 * @param individual
 	 * @param individual2
-	 * @param compObjectProperties
+	 * @param objectProperties
 	 */
-	public ObjectProperty createObjectPropertyWithIndividual(Individual domainIndividual, Individual rangeIndividual, OntObjectProperties compObjectProperties) {
+	public ObjectProperty createObjectPropertyWithIndividual(Individual domainIndividual, Individual rangeIndividual, OntObjectProperties objectProperties) {
 
-		ObjectProperty result = getObjectPropertyForString(compObjectProperties.name());
+		ObjectProperty result = getObjectPropertyForString(objectProperties.name());
 		domainIndividual.addProperty(result.asObjectProperty(), rangeIndividual);
 		return result;
 	}
@@ -113,10 +113,10 @@ public class OntologyAccess {
 	 * 
 	 * @param individual
 	 * @param individual2
-	 * @param compObjectProperties
+	 * @param objectProperties
 	 */
-	public ObjectProperty deleteObjectPropertyWithIndividual(Individual domainIndividual, Individual rangeIndividual, OntObjectProperties compObjectProperties) {
-		ObjectProperty result = getObjectPropertyForString(compObjectProperties.name());
+	public ObjectProperty deleteObjectPropertyWithIndividual(Individual domainIndividual, Individual rangeIndividual, OntObjectProperties objectProperties) {
+		ObjectProperty result = getObjectPropertyForString(objectProperties.name());
 		domainIndividual.removeProperty(result.asObjectProperty(), rangeIndividual);
 		return result;
 	}
@@ -126,14 +126,14 @@ public class OntologyAccess {
 	 * 
 	 * @param individual
 	 * @param individual2
-	 * @param compObjectProperties
+	 * @param objectProperties
 	 */
-	public Boolean existsObjectPropertyWithIndividual(Individual domainIndividual, final Individual rangeIndividual, OntObjectProperties compObjectProperties) {
-		if ((domainIndividual == null) || (rangeIndividual == null) || (compObjectProperties == null)) {
+	public Boolean existsObjectPropertyWithIndividual(Individual domainIndividual, final Individual rangeIndividual, OntObjectProperties objectProperties) {
+		if ((domainIndividual == null) || (rangeIndividual == null) || (objectProperties == null)) {
 			return false;
 		}
 
-		ObjectProperty result = getObjectPropertyForString(compObjectProperties.name());
+		ObjectProperty result = getObjectPropertyForString(objectProperties.name());
 		ExtendedIterator<Statement> linkedIndividuals = domainIndividual.listProperties(result.asProperty()).filterKeep(new Filter<Statement>() {
 			@Override
 			public boolean accept(Statement o) {
@@ -166,12 +166,12 @@ public class OntologyAccess {
 		}
 		OntClass paper = null;
 		try {
-			paper = manager.getM().createClass(encode(string));
+			paper = ontManager.getOntModel().createClass(encode(string));
 		} catch (NullPointerException e) {
 			System.out.println("und deine mudda");
 		}
 		if (definitions != null && definitions.length > 0) {
-			paper.addLiteral(manager.getM().createProperty(encode("definition")), definitions[0]);
+			paper.addLiteral(ontManager.getOntModel().createProperty(encode("definition")), definitions[0]);
 		}
 		return paper;
 	}
@@ -218,8 +218,8 @@ public class OntologyAccess {
 		return new OntResult(individual, classOnt);
 	}
 
-	public OntResult accessSingletonResourceWithClass(OntClasses compOntClass) {
-		OntClass classOnt = createOntClass(compOntClass);
+	public OntResult accessSingletonResourceWithClass(OntClasses ontologyClass) {
+		OntClass classOnt = createOntClass(ontologyClass);
 		Individual individual = createSingleTonIndividual(classOnt);
 		return new OntResult(individual, classOnt);
 	}
@@ -239,8 +239,8 @@ public class OntologyAccess {
 	// return createOntClassForString(typeClass);
 	// }
 
-	public OntClass getClass(OntClasses compOntClass) {
-		return createOntClassForString(compOntClass.name());
+	public OntClass getClass(OntClasses ontologyClass) {
+		return createOntClassForString(ontologyClass.name());
 	}
 
 	// /**
@@ -283,11 +283,11 @@ public class OntologyAccess {
 	 * @return
 	 */
 	public Individual getIndividualForString(String indivString) {
-		return manager.getM().getIndividual(encode(indivString));
+		return ontManager.getOntModel().getIndividual(encode(indivString));
 	}
 
 	private ObjectProperty getObjectPropertyForString(String objectProperty) {
-		return manager.getM().createObjectProperty(encode(objectProperty));
+		return ontManager.getOntModel().createObjectProperty(encode(objectProperty));
 	}
 
 	/**
@@ -297,8 +297,8 @@ public class OntologyAccess {
 	 * @return
 	 */
 	public OntClass getOntClassForString(String className) {
-		manager.sync();
-		OntClass paper = manager.getM().getOntClass(encode(className));
+		ontManager.sync();
+		OntClass paper = ontManager.getOntModel().getOntClass(encode(className));
 		return paper;
 	}
 

@@ -33,7 +33,7 @@ case class User(ontManager: OntologyManager, val name: String, val role: Role = 
   @Override
   def getFullDao(): User = {
     val teacherRole = new TeacherRole(ontManager)
-    val queries = new OntologyQueries(ontManager.getM())
+    val queries = new OntologyQueries(ontManager.getOntModel())
     val courseContext2 = getAssociatedStandardDaosAsRange(OntObjectProperties.belongsToCourseContext, classOf[CourseContext]).map(x => x.getFullDao.asInstanceOf[CourseContext]).head;
     val readableName = getDataField(NAME)
     if (hasEdge(teacherRole, OntObjectProperties.RoleOf)) {

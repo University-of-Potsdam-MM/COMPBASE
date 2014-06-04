@@ -30,7 +30,7 @@ public class OntologyManager {
 	static LogStream logStream = new LogStream(logger, Level.TRACE);
 
 	private OntologyAccess util;
-	private OntModel m;
+	private OntModel ontModel;
 	private SimpleRulesReasoner rulesReasoner;
 	private OntologyQueries queries;
 	private ModelChangeListener modelChangedListener;
@@ -40,8 +40,8 @@ public class OntologyManager {
 	 * should be singleton
 	 */
 	public OntologyManager() {
-		this.queries = new OntologyQueries(getM());
-		this.util = new OntologyAccess(getM(), getQueries(), this);
+		this.queries = new OntologyQueries(getOntModel());
+		this.util = new OntologyAccess(getOntModel(), getQueries(), this);
 	}
 
 	public void startReasoning() {
@@ -61,8 +61,8 @@ public class OntologyManager {
 		return dataset;
 	}
 
-	public OntModel getM() {
-		return this.m;
+	public OntModel getOntModel() {
+		return this.ontModel;
 	}
 
 	public void close() {
@@ -71,11 +71,11 @@ public class OntologyManager {
 	}
 
 	public void unregisterReasoner() {
-		m.unregister(modelChangedListener);
+		ontModel.unregister(modelChangedListener);
 	}
 
 	public void registerReasoner() {
-		m.register(modelChangedListener);
+		ontModel.register(modelChangedListener);
 	}
 
 	private void initReasoner() {
@@ -102,7 +102,7 @@ public class OntologyManager {
 		// TODO create Restrictions
 
 		close();
-		return getM();
+		return getOntModel();
 	}
 
 	private void initObjectProperties() {
@@ -140,8 +140,8 @@ public class OntologyManager {
 	}
 
 	private void initClasses() {
-		for (OntClasses compOntClass : OntClasses.values()) {
-			getUtil().createOntClass(compOntClass);
+		for (OntClasses ontologyClass : OntClasses.values()) {
+			getUtil().createOntClass(ontologyClass);
 		}
 	}
 
@@ -177,7 +177,7 @@ public class OntologyManager {
 	}
 
 	public void setM(OntModel m) {
-		this.m = m;
+		this.ontModel = m;
 	}
 
 	public SimpleRulesReasoner getRulesReasoner() {
