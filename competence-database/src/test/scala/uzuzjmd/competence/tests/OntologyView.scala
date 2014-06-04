@@ -1,14 +1,12 @@
 package uzuzjmd.competence.tests
 
-/*
-Testing the mapping
-*/
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
-import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
+
 import de.unipotsdam.ontologypersistence.owl.access.FileUtil
+import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 
 @RunWith(classOf[JUnitRunner])
 class OntologyView extends FunSuite with ShouldMatchers {
