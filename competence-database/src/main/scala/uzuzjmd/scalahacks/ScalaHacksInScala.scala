@@ -1,16 +1,14 @@
 package uzuzjmd.scalahacks
 
 import java.lang.reflect.Constructor
-import scala.collection.mutable.MutableList
-import scala.collection.mutable.ListBuffer
-import uzuzjmd.competence.owl.access.CompOntologyManager
-import scala.collection.JavaConverters._
+
+import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
 
 object ScalaHacksInScala {
   /**
    * Hilfsfunktion, um eine generisch spezifizierte Klasse zu instantiieren
    */
-  def instantiateDao[A](clazz: java.lang.Class[A])(comp: CompOntologyManager, identifier: String): Any = {
+  def instantiateDao[A](clazz: java.lang.Class[A])(comp: OntologyManager, identifier: String): Any = {
     val constructors = clazz.getDeclaredConstructors()
     val constructor = constructors.head
     constructor.setAccessible(true);

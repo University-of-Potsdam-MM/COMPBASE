@@ -7,23 +7,22 @@ import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import uzuzjmd.competence.owl.access.CompFileUtil
-import uzuzjmd.competence.owl.access.CompOntologyManager
-import uzuzjmd.competence.owl.access.MagicStrings
+import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
+import de.unipotsdam.ontologypersistence.owl.access.FileUtil
 
 @RunWith(classOf[JUnitRunner])
 class OntologyView extends FunSuite with ShouldMatchers {
 
   test("the ontology write process should be ok") {
 
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
 
     compOntManag.begin()
     compOntManag.getM().validate()
     compOntManag.close()
 
     compOntManag.begin()
-    val fileUtil = new CompFileUtil(compOntManag.getM())
+    val fileUtil = new FileUtil(compOntManag.getM())
     fileUtil.writeOntologyout()
     compOntManag.close()
   }

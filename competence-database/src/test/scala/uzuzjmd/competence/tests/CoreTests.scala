@@ -5,33 +5,27 @@ import org.junit.AfterClass
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
-import uzuzjmd.competence.owl.access.CompFileUtil
-import uzuzjmd.competence.owl.access.CompOntologyManager
-import uzuzjmd.competence.owl.dao.StudentRole
-import uzuzjmd.competence.owl.dao.TeacherRole
 import org.scalatest.junit.JUnitRunner
 import org.specs2.specification.After
 import org.specs2.mutable.After
-import uzuzjmd.competence.owl.dao.User
-import uzuzjmd.competence.owl.ontology.CompObjectProperties
-import uzuzjmd.competence.owl.ontology.CompOntClass
-import uzuzjmd.competence.owl.dao.Role
-import uzuzjmd.competence.owl.dao.Comment
-import uzuzjmd.competence.owl.dao.EvidenceActivity
-import uzuzjmd.competence.owl.dao.AbstractEvidenceLink
-import uzuzjmd.competence.owl.dao.StudentRole
-import uzuzjmd.competence.owl.dao.CourseContext
-import uzuzjmd.competence.owl.dao.TeacherRole
-import uzuzjmd.competence.owl.dao.Competence
-import uzuzjmd.competence.owl.dao.AbstractEvidenceLink
-import uzuzjmd.competence.owl.dao.CourseContext
+import de.unipotsdam.ontologypersistence.owl.dao.AbstractEvidenceLink
+import de.unipotsdam.ontologypersistence.owl.dao.Competence
+import de.unipotsdam.ontologypersistence.owl.dao.EvidenceActivity
+import de.unipotsdam.ontologypersistence.owl.dao.StudentRole
+import de.unipotsdam.ontologypersistence.owl.dao.TeacherRole
+import de.unipotsdam.ontologypersistence.owl.dao.CourseContext
+import de.unipotsdam.ontologypersistence.owl.dao.User
+import de.unipotsdam.ontologypersistence.owl.dao.Comment
+import de.unipotsdam.ontologypersistence.owl.access.OntologyManager
+import de.unipotsdam.ontologypersistence.owl.ontology.OntObjectProperties
+import de.unipotsdam.ontologypersistence.owl.access.FileUtil
 
 @RunWith(classOf[JUnitRunner])
 class CoreTests extends FunSuite with ShouldMatchers {
 
   test("if a user is persisted, the course context should be acessable") {
 
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
 
     val teacherRole = new TeacherRole(compOntManag)
@@ -48,7 +42,7 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   test("the singletondao should persist without error") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     val studentRole = new StudentRole(compOntManag)
     studentRole.persist(true)
@@ -63,7 +57,7 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   test("the regular dao should persist without error") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     val teacherRole = new TeacherRole(compOntManag)
     val coursecontext = new CourseContext(compOntManag, "2")
@@ -77,29 +71,29 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   test("if a dao is linked the link should exist") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     val teacherRole = new TeacherRole(compOntManag)
     val coursecontext = new CourseContext(compOntManag, "2")
     val user = new User(compOntManag, "me", teacherRole, coursecontext, "me")
     user.persist()
     user.exists should not be false
-    teacherRole.hasEdge(CompObjectProperties.RoleOf, user) should not be false
+    teacherRole.hasEdge(OntObjectProperties.RoleOf, user) should not be false
     user.delete
     user.exists should not be true
-    teacherRole.hasEdge(CompObjectProperties.RoleOf, user) should not be true
+    teacherRole.hasEdge(OntObjectProperties.RoleOf, user) should not be true
     user.exists should not be true
     user.persist
-    teacherRole.hasEdge(CompObjectProperties.RoleOf, user) should not be false
-    teacherRole.deleteEdge(CompObjectProperties.RoleOf, user)
+    teacherRole.hasEdge(OntObjectProperties.RoleOf, user) should not be false
+    teacherRole.deleteEdge(OntObjectProperties.RoleOf, user)
     user.exists should not be false
-    teacherRole.hasEdge(CompObjectProperties.RoleOf, user) should not be true
+    teacherRole.hasEdge(OntObjectProperties.RoleOf, user) should not be true
     compOntManag.close()
     showResult
   }
 
   test("if a comment is persisted it should have its datafields in place") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     val testkommentar = "mein testkommentar"
     val teacherRole = new TeacherRole(compOntManag)
@@ -119,7 +113,7 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   test("if a evidence link is created this should not cause errors") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     val studentRole = new StudentRole(compOntManag)
     val coursecontext = new CourseContext(compOntManag, "2")
@@ -144,7 +138,7 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   test("if a string is given the identified full dao should be returnable") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     val linkId = "hellolinkId"
     val studentRole = new StudentRole(compOntManag)
@@ -169,7 +163,7 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   test("if a requires b and b requires c, a should require c") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     compOntManag.getM().enterCriticalSection(false);
     compOntManag.startReasoning();
@@ -178,13 +172,13 @@ class CoreTests extends FunSuite with ShouldMatchers {
     val competenceC = new Competence(compOntManag, "Die Lehramtsanwärter beschreiben den Lernstand der SuS und ihren eigenen Wissensstand.")
     competenceC.addRequiredCompetence(competenceB)
     competenceB.addRequiredCompetence(competenceA)
-    competenceC.hasEdge(competenceA, CompObjectProperties.PrerequisiteOf) should not be false
+    competenceC.hasEdge(competenceA, OntObjectProperties.PrerequisiteOf) should not be false
     compOntManag.close()
     showResult
   }
 
   test("testing the rules") {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
     compOntManag.getM().enterCriticalSection(false);
     compOntManag.startReasoning();
@@ -192,32 +186,32 @@ class CoreTests extends FunSuite with ShouldMatchers {
     
     val courseContext = new CourseContext(compOntManag, "n2");            
     val competenceA = new Competence(compOntManag, "Die Lehramtsanwärter kooperieren mit Kolleginnen und Kollegen bei der  Erarbeitung von Beratung/Empfehlung")
-    courseContext.createEdgeWith(CompObjectProperties.CourseContextOf, competenceA)
+    courseContext.createEdgeWith(OntObjectProperties.CourseContextOf, competenceA)
     val competenceB = new Competence(compOntManag, "Die Lehramtsanwärter erkennen Entwicklungsstände, Lernpotentiale, Lernhindernisseund Lernfortschritte")
-    courseContext.createEdgeWith(CompObjectProperties.CourseContextOf, competenceB)
+    courseContext.createEdgeWith(OntObjectProperties.CourseContextOf, competenceB)
     val competenceC = new Competence(compOntManag, "Die Lehramtsanwärter beschreiben den Lernstand der SuS und ihren eigenen Wissensstand.")
-    courseContext.createEdgeWith(CompObjectProperties.CourseContextOf, competenceB)
+    courseContext.createEdgeWith(OntObjectProperties.CourseContextOf, competenceB)
     competenceC.addRequiredCompetence(competenceB)
     competenceB.addRequiredCompetence(competenceA)
     // testing basic transition
-    competenceC.hasEdge(competenceA, CompObjectProperties.PrerequisiteOf) should not be false
+    competenceC.hasEdge(competenceA, OntObjectProperties.PrerequisiteOf) should not be false
 
     // testing not transition 1
     competenceB.addNotRequiredCompetence(competenceA)
-    competenceC.hasEdge(competenceA, CompObjectProperties.PrerequisiteOf) should not be true
+    competenceC.hasEdge(competenceA, OntObjectProperties.PrerequisiteOf) should not be true
 
     // testing basic transition
     competenceB.addRequiredCompetence(competenceA)
-    competenceC.hasEdge(competenceA, CompObjectProperties.PrerequisiteOf) should not be false
+    competenceC.hasEdge(competenceA, OntObjectProperties.PrerequisiteOf) should not be false
 
     // testing not transition 2
     competenceC.addNotRequiredCompetence(competenceB)
-    competenceB.hasEdge(competenceA, CompObjectProperties.PrerequisiteOf) should not be true
+    competenceB.hasEdge(competenceA, OntObjectProperties.PrerequisiteOf) should not be true
 
     // testing basic transition
     competenceC.addRequiredCompetence(competenceB)
     competenceB.addRequiredCompetence(competenceA)
-    competenceC.hasEdge(competenceA, CompObjectProperties.PrerequisiteOf) should not be false
+    competenceC.hasEdge(competenceA, OntObjectProperties.PrerequisiteOf) should not be false
 
     // testing the create link transition
     val linkId = "hellolinkId"
@@ -231,14 +225,14 @@ class CoreTests extends FunSuite with ShouldMatchers {
   }
 
   private def showResult() {
-    val compOntManag = new CompOntologyManager()
+    val compOntManag = new OntologyManager()
     compOntManag.begin()
-    val fileUtil = new CompFileUtil(compOntManag.getM())
+    val fileUtil = new FileUtil(compOntManag.getM())
     fileUtil.writeOntologyout()
     compOntManag.close()
   }
 
-  private def createAbstract(compOntManag: CompOntologyManager, linkId: String, userstudent: User): AbstractEvidenceLink = {
+  private def createAbstract(compOntManag: OntologyManager, linkId: String, userstudent: User): AbstractEvidenceLink = {
     val coursecontext = new CourseContext(compOntManag, "2")
     val teacherRole = new TeacherRole(compOntManag)
     val user = new User(compOntManag, "me", teacherRole, coursecontext, "me")
@@ -254,11 +248,11 @@ class CoreTests extends FunSuite with ShouldMatchers {
 
     val evidenceActivity = new EvidenceActivity(compOntManag, "http://testest", "meine testaktivitat")
     val competence = new Competence(compOntManag, "Die Lehramtsanwärter kooperieren mit Kolleginnen und Kollegen bei der  Erarbeitung von Beratung/Empfehlung")
-    competence.createEdgeWith(coursecontext, CompObjectProperties.CourseContextOf)
+    competence.createEdgeWith(coursecontext, OntObjectProperties.CourseContextOf)
     val link = new AbstractEvidenceLink(compOntManag, linkId, user, userstudent, coursecontext, (comment :: comment2 :: Nil), evidenceActivity, System.currentTimeMillis(), false, competence)
     link.persist
-    comment.hasEdge(userstudent, CompObjectProperties.UserOfComment) should not be false
-    comment2.hasEdge(userstudent, CompObjectProperties.UserOfComment) should not be false
+    comment.hasEdge(userstudent, OntObjectProperties.UserOfComment) should not be false
+    comment2.hasEdge(userstudent, OntObjectProperties.UserOfComment) should not be false
     return link
   }
 
