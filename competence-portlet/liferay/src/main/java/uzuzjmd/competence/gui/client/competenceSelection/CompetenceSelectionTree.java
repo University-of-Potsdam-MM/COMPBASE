@@ -7,6 +7,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.Resource;
 
 import uzuzjmd.competence.gui.client.LmsContextFactory;
+import uzuzjmd.competence.gui.client.persistence.GetRequestManager;
 import uzuzjmd.competence.gui.client.shared.widgets.CheckableTreePanel;
 
 import com.google.gwt.core.client.GWT;
@@ -45,39 +46,11 @@ public class CompetenceSelectionTree extends CheckableTreePanel {
 	}
 
 	private void setCompetenceSelected(final TreeNode node) {
-		if (selectedFilter != null) {
-			Resource resource = new Resource(contextFactory.getServerURL()
-					+ "/competences/json/" + selectedFilter + "/"
-					+ contextFactory.getCourseId());
-			resource.get().send(new JsonCallback() {
-
-				@Override
-				public void onSuccess(Method arg0, JSONValue arg1) {
-					ArrayList<String> list = new ArrayList<String>();
-					convertToList(arg1, list);
-					doSelect(node, list);
-				}
-
-				private void convertToList(JSONValue arg1,
-						ArrayList<String> list) {
-					JSONArray jsonArray = (JSONArray) arg1;
-					if (jsonArray != null) {
-						int len = jsonArray.size();
-						for (int i = 0; i < len; i++) {
-							list.add(jsonArray.get(i).toString());
-						}
-					}
-				}
-
-				@Override
-				public void onFailure(Method arg0, Throwable arg1) {
-					GWT.log("could not get selected competences from server");
-				}
-			});
-		}
+		GetRequestManager getRequestManager = new GetRequestManager();
+		getRequestManager.setCompetenceSelected(node, selectedFilter, this);
 	}
 
-	private void doSelect(TreeNode node, ArrayList<String> list) {
+	public void doSelect(TreeNode node, ArrayList<String> list) {
 		MultiSelectionModel selectionModel = (MultiSelectionModel) getTreePanel()
 				.getSelectionModel();
 		TreeNode found = treePanel.getNodeById(node.getId());

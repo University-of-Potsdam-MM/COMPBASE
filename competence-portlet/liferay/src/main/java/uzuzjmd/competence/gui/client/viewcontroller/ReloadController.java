@@ -1,7 +1,6 @@
 package uzuzjmd.competence.gui.client.viewcontroller;
 
 import uzuzjmd.competence.gui.client.tabs.CompetenceTab;
-import uzuzjmd.competence.gui.client.tabs.GraphTab;
 import uzuzjmd.competence.gui.client.tabs.LinkEvidenceTab;
 import uzuzjmd.competence.gui.client.tabs.ProgressTab;
 
@@ -9,7 +8,7 @@ public class ReloadController {
 	private CompetenceTab competenceTab;
 	private LinkEvidenceTab linkTab;
 	private ProgressTab progressTab;
-	public static GraphTab graphTab;
+//	public static GraphTab graphTab;
 
 	public ReloadController(CompetenceTab competenceTab,
 			LinkEvidenceTab linkTab, ProgressTab progressTab) {
@@ -21,9 +20,9 @@ public class ReloadController {
 	public void reload() {
 		linkTab.reload();
 		progressTab.reload();
-		if (graphTab != null) {
-			graphTab.reloadPopups();
-		}
+//		if (graphTab != null) {
+//			graphTab.reloadPopups();
+//		}
 	}
 
 	public CompetenceTab getCompetenceTab() {

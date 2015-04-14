@@ -6,6 +6,7 @@ import org.fusesource.restygwt.client.Resource;
 
 import uzuzjmd.competence.gui.client.Controller;
 import uzuzjmd.competence.gui.client.LmsContextFactory;
+import uzuzjmd.competence.gui.client.persistence.PostRequestManager;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.RadioButton;
@@ -35,20 +36,7 @@ public class CompetenceSelectionWidget extends Composite {
 			UiBinder<Widget, CompetenceSelectionWidget> {
 	}
 
-	private class OkFeedBack implements RequestCallback {
-		@Override
-		public void onError(Request request, Throwable exception) {
-			// TODO Auto-generated method stub
-			GWT.log(exception.getMessage());
-		}
-
-		@Override
-		public void onResponseReceived(Request request, Response response) {
-			GWT.log(response.getStatusText());
-			competenceTree.reloadTree();
-			Controller.reloadController.reload();
-		}
-	}
+	
 
 	@UiField
 	VerticalPanel competenceTreeContainer;
@@ -85,9 +73,7 @@ public class CompetenceSelectionWidget extends Composite {
 
 	private CompetenceSelectionTree competenceTree;
 	private OperatorSelectionTree operatorTree;
-
 	private CatchwordSelectionTree catchwordTree;
-
 	private LmsContextFactory contextFactory;
 	private String filter = "all";
 	private String selectedFilter = null;
@@ -173,78 +159,13 @@ public class CompetenceSelectionWidget extends Composite {
 	}
 
 	public void handleDeleteClick() {
-		Resource resourceCompulsory = new Resource(
-				contextFactory.getServerURL()
-						+ "/competences/json/coursecontext/delete/"
-						+ contextFactory.getCourseId());
-		try {
-			resourceCompulsory.post().send(new OkFeedBack());
-		} catch (RequestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			GWT.log(e.getMessage());
-		}
-
+		PostRequestManager manager = new PostRequestManager();
+		manager.handleDeleteClick(competenceTree);
 	}
 
-	public void handleSubmit(final String requirementText) {
-		sendNonCompulsoryNodesToServer(requirementText);
-	}
-
-	private void sendCompulsoryNodesToServer(final String requirementText) {
-		if (!competenceTree.getCheckedNodes().isEmpty()) {
-			Resource resourceCompulsory = new Resource(
-					contextFactory.getServerURL()
-							+ "/competences/json/coursecontext/create/"
-							+ contextFactory.getCourseId() + "/true");
-			try {
-				resourceCompulsory
-						.addQueryParam("requirements", requirementText)
-						.addQueryParams("competences",
-								competenceTree.getCheckedNodes()).post()
-						.send(new OkFeedBack());
-			} catch (RequestException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			GWT.log("not sending compulsory nodes because non selected");
-			competenceTree.reloadTree();
-			Controller.reloadController.reload();
-		}
-	}
-
-	private void sendNonCompulsoryNodesToServer(final String requirementText) {
-		if (!competenceTree.convertSelectedTreeToList().isEmpty()) {
-			Resource resource = new Resource(contextFactory.getServerURL()
-					+ "/competences/json/coursecontext/create/"
-					+ contextFactory.getCourseId() + "/false");
-			try {
-				resource.addQueryParam("requirements", requirementText)
-						.addQueryParams("competences",
-								competenceTree.convertSelectedTreeToList())
-						.post().send(new RequestCallback() {
-							@Override
-							public void onError(Request request,
-									Throwable exception) {
-								GWT.log(exception.getMessage());
-							}
-
-							@Override
-							public void onResponseReceived(Request request,
-									Response response) {
-								GWT.log("successfully send non compulsory competences to server");
-								sendCompulsoryNodesToServer(requirementText);
-							}
-						});
-			} catch (RequestException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			sendCompulsoryNodesToServer(requirementText);
-		}
-
+	public void handleSubmit(final String requirementText) {				
+		PostRequestManager manager = new PostRequestManager();
+		manager.sendNonCompulsoryNodesToServer(requirementText, competenceTree);
 	}
 
 	@UiHandler("alleRadioButton")

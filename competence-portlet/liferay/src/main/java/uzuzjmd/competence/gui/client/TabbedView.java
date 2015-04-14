@@ -31,8 +31,9 @@ public class TabbedView extends Composite {
 	}
 
 	public TabbedView(String firstName) {
+		GWT.log("start initiating TabbedView");
 		initWidget(uiBinder.createAndBindUi(this));
-
+		GWT.log("stop initiating TabbedView");
 	}
 
 //	@Override

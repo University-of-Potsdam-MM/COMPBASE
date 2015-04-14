@@ -1,23 +1,14 @@
 package uzuzjmd.competence.gui.client.tabs;
 
-import java.util.Map;
-
-import org.fusesource.restygwt.client.JsonCallback;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.Resource;
-
 import uzuzjmd.competence.gui.client.LmsContextFactory;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
-import uzuzjmd.competence.gui.client.progressView.ProgressEntry;
-import uzuzjmd.competence.gui.client.shared.JsonUtil;
+import uzuzjmd.competence.gui.client.persistence.GetRequestManager;
 
 import com.github.gwtbootstrap.client.ui.Alert;
 import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.constants.AlertType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -46,10 +37,11 @@ public class ProgressTab extends CompetenceTab {
 	FocusPanel warningPlaceholder;
 	@UiField
 	Button filterButton;
-
-	private Alert alert;
+	
 	private CompetenceSelectionWidget competenceSelectionWidget;
 	private LmsContextFactory contextFactory;
+	
+	private Alert alert;
 
 	interface ProgressTabUiBinder extends UiBinder<Widget, ProgressTab> {
 	}
@@ -74,45 +66,8 @@ public class ProgressTab extends CompetenceTab {
 
 	public void showProgressEntries(final LmsContextFactory contextFactory,
 			final boolean firstShow) {
-		progressPlaceHolder.clear();
-		GWT.log("Initiating progress entries");
-		Resource resource = new Resource(contextFactory.getServerURL()
-				+ "/competences/json/link/progress/"
-				+ contextFactory.getCourseId());
-		resource.addQueryParams("competences",
-				competenceSelectionWidget.getSelectedCompetences()).get()
-				.send(new JsonCallback() {
-
-					@Override
-					public void onSuccess(Method arg0, JSONValue arg1) {
-						Map<String, String> userProgressMap = JsonUtil
-								.toMap(arg1);
-						GWT.log("addin progress entries to Progress Tab");
-						for (String userName : userProgressMap.keySet()) {
-							progressPlaceHolder.add(new ProgressEntry(userName,
-									Integer.valueOf(userProgressMap
-											.get(userName)), contextFactory));
-						}
-						GWT.log("finished adding progress entries to progress tab");
-						if (!firstShow) {
-							alert = new Alert("Erfolgreich gefiltert",
-									AlertType.SUCCESS);
-							warningPlaceholder.add(alert);
-						}
-					}
-
-					@Override
-					public void onFailure(Method arg0, Throwable arg1) {
-						GWT.log("could not get progress map from server for course context"
-								+ contextFactory.getCourseId());
-
-						alert = new Alert(
-								"Es gab Probleme bei der Datenbank, kontaktieren Sie einen Entwickler",
-								AlertType.ERROR);
-						warningPlaceholder.add(alert);
-					}
-				});
-		GWT.log("Initiated progress entries");
+		GetRequestManager getRequestManager = new GetRequestManager();
+		getRequestManager.showProgressEntries(contextFactory, firstShow, progressPlaceHolder, warningPlaceholder, competenceSelectionWidget, this);
 	}
 
 	@UiHandler("filterButton")
@@ -133,5 +88,9 @@ public class ProgressTab extends CompetenceTab {
 	public void reload() {
 		competenceSelectionWidget.reload();
 		showProgressEntries(contextFactory, false);
+	}
+	
+	public void setAlert(Alert alert1) {
+		alert = alert1;
 	}
 }
