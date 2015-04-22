@@ -55,55 +55,27 @@ public class CompetenceServiceRestXML extends CompetenceOntologyInterface {
 		competenceServiceImpl.insertCompetence(input);
 	}
 
-	/**
-	 * Get the GUI Competence TREE
-	 * 
-	 * @param course
-	 * @param compulsory
-	 * @param cache
-	 * @param selectedCatchwords
-	 * @param selectedOperators
-	 * @return
-	 */
 	@Produces(MediaType.APPLICATION_XML)
 	@GET
-	@Path("/competencetree/{course}/{compulsory}/{cache}")
-	public Response getCompetenceTree(@PathParam("course") String course, @PathParam("compulsory") String compulsory, @PathParam("cache") String cache,
+	@Path("/competencetree/university/{compulsory}/{cache}")
+	public Response getCompetenceTreeForUniversity(@PathParam("compulsory") String compulsory, @PathParam("cache") String cache,
 			@QueryParam(value = "selectedCatchwords") List<String> selectedCatchwords, @QueryParam(value = "selectedOperators") List<String> selectedOperators) {
 
 		CompetenceXMLTree[] result = null;
 		if (compulsory.equals("all")) {
-			result = CompetenceServiceWrapper.getCompetenceTree(selectedCatchwords, selectedOperators, course, null);
+			result = CompetenceServiceWrapper.getCompetenceTreeForCourse(selectedCatchwords, selectedOperators, "university", null);
 		} else {
 			Boolean compulsoryBoolean = RestUtil.convertCompulsory(compulsory);
-			result = CompetenceServiceWrapper.getCompetenceTree(selectedCatchwords, selectedOperators, course, compulsoryBoolean);
+			result = CompetenceServiceWrapper.getCompetenceTreeForCourse(selectedCatchwords, selectedOperators, "university", compulsoryBoolean);
 		}
 
-		Response response = RestUtil.buildCachedResponse(result, cache.equals("cached"));
+		Response response = RestUtil.buildCachedResponse(result, cache.equals("cache"));
 		return response;
 	}
 
 	@Produces(MediaType.APPLICATION_XML)
 	@GET
-	@Path("/competencetree/coursecontext/{course}/{compulsory}/{cache}")
-	public Response getCompetenceTreeForCourse(@PathParam("course") String course, @PathParam("compulsory") String compulsory, @PathParam("cache") String cache,
-			@QueryParam(value = "selectedCatchwords") List<String> selectedCatchwords, @QueryParam(value = "selectedOperators") List<String> selectedOperators) {
-
-		CompetenceXMLTree[] result = null;
-		if (compulsory.equals("all")) {
-			result = CompetenceServiceWrapper.getCompetenceTreeForCourse(selectedCatchwords, selectedOperators, course, null);
-		} else {
-			Boolean compulsoryBoolean = RestUtil.convertCompulsory(compulsory);
-			result = CompetenceServiceWrapper.getCompetenceTreeForCourse(selectedCatchwords, selectedOperators, course, compulsoryBoolean);
-		}
-
-		Response response = RestUtil.buildCachedResponse(result, cache.equals("cached"));
-		return response;
-	}
-
-	@Produces(MediaType.APPLICATION_XML)
-	@GET
-	@Path("/competencetree/coursecontextnofilter/{course}/{compulsory}/{cache}")
+	@Path("/competencetree/course/{compulsory}/{cache}/{course}")
 	public Response getCompetenceTreeForCourseWithoutFilter(@PathParam("course") String course, @PathParam("compulsory") String compulsory, @PathParam("cache") String cache,
 			@QueryParam(value = "selectedCatchwords") List<String> selectedCatchwords, @QueryParam(value = "selectedOperators") List<String> selectedOperators) {
 
@@ -115,6 +87,26 @@ public class CompetenceServiceRestXML extends CompetenceOntologyInterface {
 			result = CompetenceServiceWrapper.getCompetenceTreeForCourseNoFilter(selectedCatchwords, selectedOperators, course, compulsoryBoolean);
 		}
 
+		Response response = RestUtil.buildCachedResponse(result, cache.equals("cache"));
+		return response;
+	}
+
+	/**
+	 * Get the GUI operator tree
+	 * 
+	 * @param course
+	 * @param cache
+	 * @param selectedCatchwords
+	 * @param selectedOperators
+	 * @return
+	 */
+	@Produces(MediaType.APPLICATION_XML)
+	@GET
+	@Path("/operatortree/university/{cache}")
+	public Response getOperatorTreeForUniversity(@PathParam("cache") String cache, @QueryParam(value = "selectedCatchwords") List<String> selectedCatchwords,
+			@QueryParam(value = "selectedOperators") List<String> selectedOperators) {
+
+		OperatorXMLTree[] result = CompetenceServiceWrapper.getOperatorTree(selectedCatchwords, selectedOperators, "university");
 		Response response = RestUtil.buildCachedResponse(result, cache.equals("cached"));
 		return response;
 	}
@@ -130,7 +122,7 @@ public class CompetenceServiceRestXML extends CompetenceOntologyInterface {
 	 */
 	@Produces(MediaType.APPLICATION_XML)
 	@GET
-	@Path("/operatortree/{course}/{cache}")
+	@Path("/operatortree/course/{cache}/{course}")
 	public Response getOperatorTree(@PathParam("course") String course, @PathParam("cache") String cache, @QueryParam(value = "selectedCatchwords") List<String> selectedCatchwords,
 			@QueryParam(value = "selectedOperators") List<String> selectedOperators) {
 

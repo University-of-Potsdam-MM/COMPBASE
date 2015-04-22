@@ -170,11 +170,11 @@
 		<!-- <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/gwt-bootstrap-2.3.2.1-ownbuildwithfix.jar</systemPath> -->
 		<!-- </dependency> -->
 
-		<!-- <dependency> -->
-		<!-- <groupId>uzuzjmd.competence</groupId> -->
-		<!-- <artifactId>competence-shared</artifactId> -->
-		<!-- <version>0.0.1-SNAPSHOT</version> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>uzuzjmd.competence</groupId>
+			<artifactId>competence-shared</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 	</dependencies>
 
@@ -229,7 +229,7 @@
 			</plugin>
 		</plugins>
 
-<!-- This is necessary so the widget can be reused in vaadin -->
+		<!-- This is necessary so the widget can be reused in vaadin -->
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>

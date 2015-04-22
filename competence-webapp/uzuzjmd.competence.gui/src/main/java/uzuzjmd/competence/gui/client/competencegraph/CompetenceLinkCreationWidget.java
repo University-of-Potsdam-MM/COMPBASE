@@ -7,6 +7,7 @@ import org.fusesource.restygwt.client.Resource;
 
 import uzuzjmd.competence.gui.client.Controller;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
 import uzuzjmd.competence.gui.client.tabs.GraphTab;
 
 import com.github.gwtbootstrap.client.ui.Alert;
@@ -63,14 +64,16 @@ public class CompetenceLinkCreationWidget extends Composite {
 		this.graphtab = graphtab;
 		this.parent = parent;
 		requiredCompetenceSelectionWidget = new CompetenceSelectionWidget(
-				Controller.contextFactory, null, "coursecontextnofilter/",
-				"  Vorausgesetzte Kompetenzen");
+				Controller.contextFactory, null,
+				ContextSelectionFilter.university,
+				"  Vorausgesetzte Kompetenzen", false);
 		requiredKompetenzesPlaceholder.add(requiredCompetenceSelectionWidget);
 		// requiredKompetenzesPlaceholder2.add(requiredCompetenceSelectionWidget);
 
 		followingCompetenceSelectionWidget = new CompetenceSelectionWidget(
-				Controller.contextFactory, null, "coursecontextnofilter/",
-				"  Nachfolgende Kompetenzen");
+				Controller.contextFactory, null,
+				ContextSelectionFilter.university,
+				"  Nachfolgende Kompetenzen", false);
 		followingCompetences.add(followingCompetenceSelectionWidget);
 		// followingCompetences2.add(followingCompetenceSelectionWidget);
 	}

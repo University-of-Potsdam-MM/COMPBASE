@@ -11,6 +11,7 @@ public class LmsContextFactory implements java.io.Serializable {
 	private String evidenceServerUrl;
 	private String role;
 	private String userName;
+	private String organization;
 
 	public LmsContextFactory() {
 		this.courseId = getCourseIdFromContext();
@@ -18,6 +19,7 @@ public class LmsContextFactory implements java.io.Serializable {
 		this.evidenceServerUrl = getEvidenceServerUrlFromContext();
 		this.role = getRoleFromContext();
 		this.userName = getUserFromContext();
+		setOrganization("university");
 	}
 
 	public LmsContextFactory(long courseId, String serverUrl,
@@ -36,6 +38,7 @@ public class LmsContextFactory implements java.io.Serializable {
 		}
 		this.role = role;
 		this.userName = userName;
+		setOrganization("university");
 	}
 
 	public String getUserFromContext() {
@@ -80,6 +83,14 @@ public class LmsContextFactory implements java.io.Serializable {
 
 	public String getUser() {
 		return userName;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
 	}
 
 }

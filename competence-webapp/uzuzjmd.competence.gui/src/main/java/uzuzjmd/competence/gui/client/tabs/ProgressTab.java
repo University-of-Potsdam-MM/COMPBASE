@@ -8,6 +8,7 @@ import org.fusesource.restygwt.client.Resource;
 
 import uzuzjmd.competence.gui.client.LmsContextFactory;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
 import uzuzjmd.competence.gui.client.progressView.ProgressEntry;
 import uzuzjmd.competence.gui.client.shared.JsonUtil;
 
@@ -59,12 +60,13 @@ public class ProgressTab extends CompetenceTab {
 
 		this.contextFactory = contextFactory;
 		String infoText = "Hier können Sie die Zuordnung von den Kompetenzen und den Teilnehmern einsehen. Die Balken zeigen an, wie viele der ausgewählten Kompetenzen mit einer Aktivität eines Teilnehmers verknüpft wurden.";
-		infoText+= "Wenn keine Fortschrittsbalken angezeigt werden, müssen sie in dem Zuordung-Tab Aktivitäten zuordnen";
+		infoText += "Wenn keine Fortschrittsbalken angezeigt werden, müssen sie in dem Zuordung-Tab Aktivitäten zuordnen";
 		fillInfoTab(infoText, tabExplainationPanel);
 		initHrLines(HrPanelContainer);
 
 		competenceSelectionWidget = new CompetenceSelectionWidget(
-				contextFactory, null, "coursecontext/");
+				contextFactory, null, ContextSelectionFilter.course, null,
+				false);
 
 		competenceSelectionPanelPlaceholder.add(competenceSelectionWidget);
 

@@ -89,37 +89,15 @@ public class CompetenceSelectionWidget extends Composite {
 	private CatchwordSelectionTree catchwordTree;
 
 	private LmsContextFactory contextFactory;
-	private String filter = "all";
-	private String selectedFilter = null;
-	private String competenceTreeFilter = "";
+	private CompulsoryFilter selectcompulsoryFilter = CompulsoryFilter.all;
 	private Boolean showChecked = false;
+	private ContextSelectionFilter competenceContextFilter;
+	private CacheFilter cacheFilter = CacheFilter.nocache;
+	private String queryString = "";
+	private SelectedFilter selectedFilter;
 
 	private static CompetenceSelectionWidgetUiBinder uiBinder = GWT
 			.create(CompetenceSelectionWidgetUiBinder.class);
-
-	public CompetenceSelectionWidget(final LmsContextFactory contextFactory,
-			String selectedFilter, boolean showChecked) {
-		initWidget(uiBinder.createAndBindUi(this));
-		this.showChecked = showChecked;
-		initCompetenceSelectionWidget(contextFactory, selectedFilter);
-		// competenceCompulsoryCheckbox
-	}
-
-	/**
-	 * competennceFilter needs to end with /
-	 * 
-	 * @param contextFactory
-	 * @param selectedFilter
-	 * @param competenceTreeFilter
-	 */
-	public CompetenceSelectionWidget(final LmsContextFactory contextFactory,
-			String selectedFilter, String competenceTreeFilter) {
-		initWidget(uiBinder.createAndBindUi(this));
-		this.competenceTreeFilter = competenceTreeFilter;
-		this.showChecked = false;
-		initCompetenceSelectionWidget(contextFactory, selectedFilter);
-		// competenceCompulsoryCheckbox
-	}
 
 	/**
 	 * selectedFilter can be /all, /selected or null competenceTreeFilter can be
@@ -131,22 +109,25 @@ public class CompetenceSelectionWidget extends Composite {
 	 * @param title
 	 */
 	public CompetenceSelectionWidget(final LmsContextFactory contextFactory,
-			String selectedFilter, String competenceTreeFilter, String title) {
+			SelectedFilter selectedFilter,
+			ContextSelectionFilter competenceContextFilter, String title,
+			Boolean showChecked) {
 		initWidget(uiBinder.createAndBindUi(this));
-		this.competenceTreeFilter = competenceTreeFilter;
-		this.showChecked = false;
-		initCompetenceSelectionWidget(contextFactory, selectedFilter);
-		this.captionPanel.setCaptionHTML(title);
+		this.contextFactory = Controller.contextFactory;
+		this.showChecked = showChecked;
+		this.competenceContextFilter = competenceContextFilter;
+		this.selectedFilter = selectedFilter;
+		initCompetenceSelectionWidget();
+		if (title != null) {
+			this.captionPanel.setCaptionHTML(title);
+		}
+
 	}
 
-	private void initCompetenceSelectionWidget(
-			final LmsContextFactory contextFactory, String selectedFilter) {
-		this.contextFactory = contextFactory;
-		this.selectedFilter = selectedFilter;
-
-		updateFilteredPanel("all", null);
-		initOperatorTree(contextFactory);
-		initCatchwordTree(contextFactory);
+	private void initCompetenceSelectionWidget() {
+		updateFilteredPanel();
+		initOperatorTree();
+		initCatchwordTree();
 		this.alleRadioButton.setValue(true);
 		ToggleButton toggleButton = new ToggleButton("Filter ausklappen",
 				"Filter einklappen");
@@ -161,7 +142,7 @@ public class CompetenceSelectionWidget extends Composite {
 		toggleButtonPlaceholder.add(toggleButton);
 	}
 
-	private void initCatchwordTree(final LmsContextFactory contextFactory) {
+	private void initCatchwordTree() {
 		GWT.log("Initiating catchword tree");
 		this.catchwordTree = new CatchwordSelectionTree(
 				contextFactory.getServerURL()
@@ -173,14 +154,19 @@ public class CompetenceSelectionWidget extends Composite {
 		GWT.log("Initiated catchword tree");
 	}
 
-	private void initOperatorTree(final LmsContextFactory contextFactory) {
+	private void initOperatorTree() {
 		GWT.log("Initiating operator tree");
+
+		String course = "";
+		if (competenceContextFilter.equals(competenceContextFilter.course)) {
+			course += "/" + contextFactory.getCourseId();
+		}
 		this.operatorTree = new OperatorSelectionTree(
 				contextFactory.getServerURL()
 						+ "/competences/xml/operatortree/"
-						+ contextFactory.getCourseId() + "/nocache",
-				"Operatoren", "operatorView", 300, 200, "Operatoren",
-				contextFactory);
+						+ competenceContextFilter.toString() + "/nocache"
+						+ course, "Operatoren", "operatorView", 300, 200,
+				"Operatoren", contextFactory);
 		operatorCaptionPanel.add(operatorTree);
 		GWT.log("Initiated operator tree");
 	}
@@ -262,41 +248,45 @@ public class CompetenceSelectionWidget extends Composite {
 
 	@UiHandler("alleRadioButton")
 	void onRadioButtonClick(ClickEvent event) {
-		filter = "all";
-		updateFilteredPanel(filter, null);
+		selectcompulsoryFilter = CompulsoryFilter.all;
+		updateFilteredPanel();
 	}
 
 	@UiHandler("verpflichtendeRadioButton")
 	void onRadioButton_1Click(ClickEvent event) {
-		filter = "true";
-		updateFilteredPanel(filter, null);
+		selectcompulsoryFilter = CompulsoryFilter.compulsory;
+		updateFilteredPanel();
 	}
 
 	@UiHandler("nichtVerpflichtendeRadioButton")
 	void onRadioButton_2Click(ClickEvent event) {
-		filter = "false";
-		updateFilteredPanel(filter, null);
+		selectcompulsoryFilter = CompulsoryFilter.notcompulsory;
+		updateFilteredPanel();
 	}
 
-	private void updateFilteredPanel(String filter, String query) {
+	private void updateFilteredPanel() {
 		competenceTreeCaptionPanel.clear();
-		String queryString = "";
-		if (query != null) {
-			queryString += query;
+
+		String course = "";
+		if (this.competenceContextFilter.equals(competenceContextFilter.course)) {
+			course += "/" + contextFactory.getCourseId();
 		}
+
 		competenceTree = new CompetenceSelectionTree(
 				contextFactory.getServerURL()
 						+ "/competences/xml/competencetree/"
-						+ competenceTreeFilter + contextFactory.getCourseId()
-						+ "/" + filter + "/nocache" + queryString,
-				contextFactory, selectedFilter, showChecked);
+						+ this.competenceContextFilter.toString() + "/"
+						+ selectcompulsoryFilter.toString() + "/" + cacheFilter
+						+ course + queryString, contextFactory, selectedFilter,
+				showChecked);
 		// competenceTree.setShowCheckBoxes(showChecked);
 		competenceTreeCaptionPanel.add(competenceTree);
 	}
 
 	@UiHandler("resetButton")
 	void onResetButtonClick(ClickEvent event) {
-		updateFilteredPanel("all", null);
+		selectcompulsoryFilter = CompulsoryFilter.all;
+		updateFilteredPanel();
 		operatorTree.clearSelections();
 		catchwordTree.clearSelections();
 	}
@@ -315,8 +305,8 @@ public class CompetenceSelectionWidget extends Composite {
 			query += selectedCatchwords;
 			query += "&";
 		}
-		query = query.substring(0, query.length() - 1);
-		updateFilteredPanel(filter, query);
+		this.queryString = query.substring(0, query.length() - 1);
+		updateFilteredPanel();
 	}
 
 	public List<String> getSelectedCompetences() {

@@ -95,7 +95,7 @@ public class GraphTab extends Composite {
 		Resource resource = new Resource(
 				Controller.contextFactory.getServerURL()
 						+ "/competences/json/prerequisite/graph/"
-						+ Controller.contextFactory.getCourseId());
+						+ Controller.contextFactory.getOrganization());
 		resource.addQueryParams("selectedCompetences", selectedCompetences)
 				.get().send(new JsonCallback() {
 

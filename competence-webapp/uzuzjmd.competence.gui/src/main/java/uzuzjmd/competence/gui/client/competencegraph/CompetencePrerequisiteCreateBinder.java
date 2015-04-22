@@ -7,6 +7,7 @@ import org.fusesource.restygwt.client.Resource;
 
 import uzuzjmd.competence.gui.client.Controller;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
 import uzuzjmd.competence.gui.client.tabs.GraphTab;
 
 import com.github.gwtbootstrap.client.ui.Alert;
@@ -56,11 +57,11 @@ public class CompetencePrerequisiteCreateBinder extends Composite {
 	public CompetencePrerequisiteCreateBinder(PopupPanel parent,
 			GraphTab graphtab, String followingCompetence) {
 		initWidget(uiBinder.createAndBindUi(this));
-		this.graphtab = graphtab;
 		this.parent = parent;
 		requiredCompetenceSelectionWidget = new CompetenceSelectionWidget(
-				Controller.contextFactory, null, "coursecontextnofilter/",
-				"Vorausgesetzte Kompetenzen");
+				Controller.contextFactory, null,
+				ContextSelectionFilter.university,
+				"Vorausgesetzte Kompetenzen", false);
 		requiredKompetenzesPlaceholder2.add(requiredCompetenceSelectionWidget);
 		this.followingCompetence = followingCompetence;
 	}

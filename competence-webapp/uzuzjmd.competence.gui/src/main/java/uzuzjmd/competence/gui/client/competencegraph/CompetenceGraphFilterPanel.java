@@ -2,6 +2,7 @@ package uzuzjmd.competence.gui.client.competencegraph;
 
 import uzuzjmd.competence.gui.client.Controller;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
 import uzuzjmd.competence.gui.client.tabs.GraphTab;
 
 import com.github.gwtbootstrap.client.ui.Button;
@@ -39,8 +40,9 @@ public class CompetenceGraphFilterPanel extends Composite {
 		this.graphTab = graphtab;
 
 		filterCompetencesWidget = new CompetenceSelectionWidget(
-				Controller.contextFactory, null, "coursecontextnofilter/",
-				"  Kompetenzen filtern");
+				Controller.contextFactory, null,
+				ContextSelectionFilter.university, "  Kompetenzen filtern",
+				false);
 		filteredCompetencesPlaceholder.add(filterCompetencesWidget);
 
 	}

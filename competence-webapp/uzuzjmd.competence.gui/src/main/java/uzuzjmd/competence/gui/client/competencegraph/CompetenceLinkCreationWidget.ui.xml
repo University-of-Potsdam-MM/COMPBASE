@@ -12,6 +12,14 @@
 				Zuordnungen werden automatisch überprüft!</b:Alert>
 			<b:Container pullRight="true">
 				<b:Row>
+					<g:HorizontalPanel>
+						<b:Button ui:field="submitButton">Markierte Verknüpfungen erstellen</b:Button>
+						<!-- <b:Button ui:field="deleteButton">Markierte Verknüpfungen löschen</b:Button> -->
+						<b:Button ui:field="cancelButton">abbrechen</b:Button>
+					</g:HorizontalPanel>					
+					<g:FocusPanel ui:field="warningPlaceholderPanel" />
+				</b:Row>
+				<b:Row>
 					<g:SimplePanel ui:field="requiredKompetenzesPlaceholder" />
 				</b:Row>
 				<b:Row>
@@ -29,12 +37,7 @@
 				<!-- </g:SimplePanel> -->
 				<!-- </b:Row> -->
 			</b:Container>
-			<g:FocusPanel ui:field="warningPlaceholderPanel" />
-			<g:HorizontalPanel>
-				<b:Button ui:field="submitButton">Markierte Verknüpfungen erstellen</b:Button>
-				<!-- <b:Button ui:field="deleteButton">Markierte Verknüpfungen löschen</b:Button> -->
-				<b:Button ui:field="cancelButton">abbrechen</b:Button>
-			</g:HorizontalPanel>
+
 		</g:VerticalPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

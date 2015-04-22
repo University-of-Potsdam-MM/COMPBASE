@@ -9,6 +9,7 @@ import org.fusesource.restygwt.client.Resource;
 import uzuzjmd.competence.gui.client.Controller;
 import uzuzjmd.competence.gui.client.LmsContextFactory;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
 import uzuzjmd.competence.gui.client.linkView.ActivityTree;
 import uzuzjmd.competence.gui.client.shared.Evidence;
 
@@ -90,7 +91,8 @@ public class LinkEvidenceTab extends CompetenceTab {
 
 	private void initCompetenceSelectionWidget(LmsContextFactory contextFactory) {
 		competenceSelectionWidget = new CompetenceSelectionWidget(
-				contextFactory, null, "coursecontext/");
+				contextFactory, null, ContextSelectionFilter.course, null,
+				false);
 
 		competenceSelectionPanelPlaceholder.add(competenceSelectionWidget);
 	}

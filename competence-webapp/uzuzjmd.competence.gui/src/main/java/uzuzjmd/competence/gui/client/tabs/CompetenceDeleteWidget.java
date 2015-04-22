@@ -7,6 +7,7 @@ import org.fusesource.restygwt.client.TextCallback;
 import uzuzjmd.competence.gui.client.Controller;
 import uzuzjmd.competence.gui.client.LmsContextFactory;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
 
 import com.github.gwtbootstrap.client.ui.Alert;
 import com.google.gwt.core.client.GWT;
@@ -42,8 +43,9 @@ public class CompetenceDeleteWidget extends Composite {
 	public CompetenceDeleteWidget(LmsContextFactory lmsContextFactory) {
 		initWidget(uiBinder.createAndBindUi(this));
 		deleteCompetencesSelectionWidget = new CompetenceSelectionWidget(
-				lmsContextFactory, "all", null,
-				"Wählen sie die Kompetenzen aus, die sie löschen wollen!");
+				lmsContextFactory, null, ContextSelectionFilter.university,
+				"Wählen sie die Kompetenzen aus, die sie löschen wollen!",
+				false);
 		competenceSelectionHolder.add(deleteCompetencesSelectionWidget);
 
 	}

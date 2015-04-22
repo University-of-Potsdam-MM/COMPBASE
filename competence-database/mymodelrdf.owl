@@ -198,13 +198,6 @@
     <rdfs:subClassOf rdf:resource="http://comp#MiteinandersprechenB2"/>
     <j.0:definition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ich kann ein vorbereitetes Interviewgespräch führen, dabei nachfragen, ob ich das Gesagte richtig verstanden habe, und auf interessante Antworten näher eingehen. </j.0:definition>
   </rdf:Description>
-  <rdf:Description rdf:about="http://comp#AverycorrectCompetence">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-    <rdfs:subClassOf rdf:resource="http://comp#Competence"/>
-    <rdfs:subClassOf rdf:resource="http://comp#CSstudentsexploreinformaticssystemssystematically"/>
-    <rdfs:subClassOf rdf:resource="http://comp#IchkannZahlenPreisangabenundUhrzeitenverstehen"/>
-    <rdfs:subClassOf rdf:resource="http://comp#Kompetenz"/>
-  </rdf:Description>
   <rdf:Description rdf:about="http://comp#IIchkannInformationenausverschiedenenQuellenzusammenfassenunddieArgumenteundberichtetenSachverhaltesowiedergebendassinsgesamteinekohärenteDarstellungentsteht">
     <rdf:type rdf:resource="http://comp#IchkannInformationenausverschiedenenQuellenzusammenfassenunddieArgumenteundberichtetenSachverhaltesowiedergebendassinsgesamteinekohärenteDarstellungentsteht"/>
   </rdf:Description>
@@ -1275,10 +1268,6 @@
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
     <rdfs:subClassOf rdf:resource="http://comp#Operator"/>
     <j.0:definition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">interact</j.0:definition>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://comp#Kompetenz">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-    <rdfs:subClassOf rdf:resource="http://comp#Competence"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://comp#MiteinandersprechenC1">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
@@ -2690,6 +2679,39 @@
   <rdf:Description rdf:about="http://comp#IIchkanneinerVorlesungzuThemenmeinesFachgebietesdetaillierteNotizenmachenundzwarsoexaktundnaheamOriginaldassdieseNotizenauchfüranderenützlichsind">
     <rdf:type rdf:resource="http://comp#IchkanneinerVorlesungzuThemenmeinesFachgebietesdetaillierteNotizenmachenundzwarsoexaktundnaheamOriginaldassdieseNotizenauchfüranderenützlichsind"/>
   </rdf:Description>
+  <rdf:Description rdf:about="http://comp#university">
+    <rdf:type rdf:resource="http://comp#CourseContext"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IHörverstehenA2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ILesenC1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ILesenB2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IMiteinandersprechenB1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ILesenA1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ISchreibenC1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IHörverstehenB1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ISchreibenB1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ISchreibenC2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IZusammenhängendsprechenB1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ISchreibenA1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IMiteinandersprechenC1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ILesenA2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IMiteinandersprechenA2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IHörverstehenB2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IZusammenhängendsprechenB2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IHörverstehenC2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IHörverstehenC1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ILesenB1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IMiteinandersprechenC2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IZusammenhängendsprechenC2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ISchreibenA2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IMiteinandersprechenB2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IMiteinandersprechenA1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ISchreibenB2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IZusammenhängendsprechenC1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IZusammenhängendsprechenA2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#ILesenC2"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IZusammenhängendsprechenA1"/>
+    <j.0:CourseContextOf rdf:resource="http://comp#IHörverstehenA1"/>
+  </rdf:Description>
   <rdf:Description rdf:about="http://comp#IchkanndieHandlungeinerklaraufgebautenErzählungverstehenunderkennenwelchesdiewichtigstenEpisodenundEreignissesindundinwiefernsiebedeutsamsind">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
     <rdfs:subClassOf rdf:resource="http://comp#Competence"/>
@@ -2698,7 +2720,6 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://comp#ICompetence">
     <rdf:type rdf:resource="http://comp#Competence"/>
-    <j.0:definition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Competence</j.0:definition>
   </rdf:Description>
   <rdf:Description rdf:about="http://comp#IIchkannzukulturellenEreignissenFilmMusikTheaterLiteraturRadioFernseheneinekritischeStellungnahmeschreiben">
     <rdf:type rdf:resource="http://comp#IchkannzukulturellenEreignissenFilmMusikTheaterLiteraturRadioFernseheneinekritischeStellungnahmeschreiben"/>
@@ -3117,9 +3138,6 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://comp#MetaCompetence">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://comp#IKompetenz">
-    <rdf:type rdf:resource="http://comp#Kompetenz"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://comp#IIchkannsagenwasichgernehabeundwasnicht">
     <rdf:type rdf:resource="http://comp#Ichkannsagenwasichgernehabeundwasnicht"/>
@@ -3594,9 +3612,6 @@
   <rdf:Description rdf:about="http://comp#IZusammenhängendsprechenA2">
     <rdf:type rdf:resource="http://comp#ZusammenhängendsprechenA2"/>
     <j.0:SuggestedCompetencePrerequisiteOf rdf:resource="http://comp#IZusammenhängendsprechenB1"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://comp#IAverycorrectCompetence">
-    <rdf:type rdf:resource="http://comp#AverycorrectCompetence"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://comp#IchkannkurzundeinfachübereinEreignisberichten">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>

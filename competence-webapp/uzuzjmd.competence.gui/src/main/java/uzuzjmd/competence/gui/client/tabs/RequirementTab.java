@@ -6,6 +6,8 @@ import org.fusesource.restygwt.client.TextCallback;
 
 import uzuzjmd.competence.gui.client.LmsContextFactory;
 import uzuzjmd.competence.gui.client.competenceSelection.CompetenceSelectionWidget;
+import uzuzjmd.competence.gui.client.competenceSelection.ContextSelectionFilter;
+import uzuzjmd.competence.gui.client.competenceSelection.SelectedFilter;
 
 import com.github.gwtbootstrap.client.ui.Alert;
 import com.github.gwtbootstrap.client.ui.Button;
@@ -70,7 +72,8 @@ public class RequirementTab extends CompetenceTab {
 		initHrLines(hrDividerPanel2);
 
 		competenceSelectionWidget = new CompetenceSelectionWidget(
-				contextFactory, "selected", true);
+				contextFactory, SelectedFilter.selected,
+				ContextSelectionFilter.course, null, true);
 		competenceSelectionPanelPlaceholder.add(competenceSelectionWidget);
 		initRequirementTextfield(contextFactory);
 

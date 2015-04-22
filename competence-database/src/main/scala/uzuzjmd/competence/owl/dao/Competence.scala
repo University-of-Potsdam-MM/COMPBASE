@@ -22,6 +22,9 @@ class Competence(compManager: CompOntologyManager, identifier: String, val defin
       //addDataField(DEFINITION, definition) legacy problem
       compManager.getUtil().createOntClassForString(definition, definition)
     }
+
+    val globalContext = new UniversityContext(compManager)
+    globalContext.createEdgeWith(CompObjectProperties.CourseContextOf, this)
   }
 
   @Override

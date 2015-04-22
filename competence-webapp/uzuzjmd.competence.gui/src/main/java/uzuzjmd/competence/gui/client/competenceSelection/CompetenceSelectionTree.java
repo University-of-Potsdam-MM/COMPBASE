@@ -21,7 +21,7 @@ import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 
 public class CompetenceSelectionTree extends CheckableTreePanel {
 
-	private String selectedFilter;
+	private SelectedFilter selectedFilter;
 
 	@Deprecated
 	public CompetenceSelectionTree(String databaseConnectionString,
@@ -35,24 +35,24 @@ public class CompetenceSelectionTree extends CheckableTreePanel {
 	}
 
 	public CompetenceSelectionTree(String dataString,
-			LmsContextFactory contextFactory, String selectedFilter,
+			LmsContextFactory contextFactory, SelectedFilter selectedFilter2,
 			Boolean showChecked) {
 		// TODO Auto-generated constructor stub
 		super(dataString, "Kompetenzen", "competenceView", RootPanel.get(
 				"rootContainer").getOffsetWidth() - 300, 350, "Kompetenzen",
 				contextFactory, showChecked);
-		this.selectedFilter = selectedFilter;
+		this.selectedFilter = selectedFilter2;
 		treePanel.addListener(new MyTreePanelLister());
 	}
 
-	public void setSelectedFilter(String selectedFilter) {
-		this.selectedFilter = selectedFilter;
-	}
+	// public void setSelectedFilter(String selectedFilter) {
+	// this.selectedFilter = selectedFilter;
+	// }
 
 	private void setCompetenceSelected(final TreeNode node) {
 		if (selectedFilter != null) {
 			Resource resource = new Resource(contextFactory.getServerURL()
-					+ "/competences/json/" + selectedFilter + "/"
+					+ "/competences/json/" + selectedFilter.toString() + "/"
 					+ contextFactory.getCourseId());
 			resource.get().send(new JsonCallback() {
 
