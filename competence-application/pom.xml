@@ -19,6 +19,7 @@
 	<module>../competence-webapp/uzuzjmd.competence.gui</module>
 <!-- 	<module>../competence-portlet/liferay</module>  	 -->
   	<module>../competence-database</module>
+  	<module>../competence-database-servlet/competence-servlet</module>
   </modules>
 
   <dependencies>

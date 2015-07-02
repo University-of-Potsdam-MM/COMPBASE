@@ -4,6 +4,8 @@ import static org.junit.Assert.assertNotSame;
 
 import java.util.LinkedList;
 
+import javax.ws.rs.core.MediaType;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,7 +43,7 @@ public class CompetenceServiceRestJSONTest {
 		// client2.resource("http://localhost:8084/competences/json/catchwords/?competence=CS+students+adada+in+heterogeneous+groups");
 		WebResource webResource2 = client2.resource("http://localhost:8080/competence-servlet/competence/competences/xml/competencetree/university/all/nocache");
 
-		ClientResponse response2 = webResource2.accept("application/json").get(ClientResponse.class);
+		ClientResponse response2 = webResource2.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 		if (response2.getStatus() != 200) {
 			throw new RuntimeException("Failed : HTTP error code : " + response2.getStatus());
 		}
@@ -51,8 +53,7 @@ public class CompetenceServiceRestJSONTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		serverThread.interrupt();
-		serverThread.stop();
+		System.out.println("finished without problems");
 	}
 
 	@Test
@@ -75,7 +76,7 @@ public class CompetenceServiceRestJSONTest {
 
 	private void benchmark1000(Runnable catchwordrunable) throws InterruptedException {
 		LinkedList<Thread> threadsStarted = new LinkedList<Thread>();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			Thread t = new Thread(catchwordrunable);
 			threadsStarted.add(t);
 			t.start();
@@ -89,7 +90,7 @@ public class CompetenceServiceRestJSONTest {
 		try {
 			Client client = Client.create();
 			WebResource webResource = client.resource("http://localhost:8080/competence-servlet/competence/competences/xml/competencetree/university/all/nocache");
-			ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}

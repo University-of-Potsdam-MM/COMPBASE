@@ -20,6 +20,11 @@ public class EvidenceServiceProxy implements EvidenceService {
 	public EvidenceServiceProxy() {
 		this.evidenceProviderMap = new EvidenceProviderMap();
 
+		setGlobalProperties();
+
+	}
+
+	private void setGlobalProperties() {
 		Properties prop = new Properties();
 		String propfFileName = "evidenceserver.properties";
 
@@ -31,6 +36,8 @@ public class EvidenceServiceProxy implements EvidenceService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		MagicStrings.TDBLocationPath = prop.getProperty("tdbLocation");
 
 		if (prop.get("liferayEnabled").equals("true")) {
 			String adminUserName = prop.getProperty("adminUserName");
@@ -49,7 +56,6 @@ public class EvidenceServiceProxy implements EvidenceService {
 				System.err.println("moodle configuration mistake");
 			}
 		}
-
 	}
 
 	@Override

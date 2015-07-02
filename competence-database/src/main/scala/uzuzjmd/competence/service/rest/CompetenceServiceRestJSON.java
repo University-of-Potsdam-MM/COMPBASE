@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -246,6 +247,10 @@ public class CompetenceServiceRestJSON extends CompetenceOntologyInterface {
 		CompOntologyManager compOntologyManager = initManagerInCriticalMode();
 		Role creatorRole = convertRole(role, compOntologyManager);
 		for (String evidence : evidences) {
+
+			if (!evidences.contains(",")) {
+				throw new WebApplicationException(new Exception("Evidences must be in Format: [Tool or Origin identifier],[link]"));
+			}
 			for (String competence : competences) {
 				CourseContext courseContext = new CourseContext(compOntologyManager, course);
 				User creatorUser = new User(compOntologyManager, creator, creatorRole, courseContext, creator);
