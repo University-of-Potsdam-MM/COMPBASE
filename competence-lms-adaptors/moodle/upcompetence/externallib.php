@@ -34,11 +34,18 @@ class local_competence_external extends external_api {#
      * @since Moodle 2.5
      */
 
-    public static function get_courses_for_user($useremail) {
+    public static function get_courses_for_user($useremail, $userpassword) {
 
         global $DB, $CFG, $USER;
 
-        if ($USER->email == $useremail) {
+        
+        // for security we check that the user that acesses the courses is the one acessing this 
+        // $USER could be used but then admin-users could check all courses of
+        
+        $username = split("@", $useremail)[0];
+        $user = authenticate_user_login($username, $userpassword);
+
+        if (!$user == false) {
 
             $query = 'SELECT c.id, c.fullname FROM {user} u INNER JOIN {user_enrolments} ue ON ue.userid = u.id INNER JOIN {enrol} e ON e.id = ue.enrolid INNER JOIN {course} c ON e.courseid = c.id WHERE u.email = ?';
             $result = $DB->get_records_sql($query, array($useremail));
@@ -170,12 +177,13 @@ class local_competence_external extends external_api {#
     }
 
     public static function user_exists($useremail) {
-        global $DB, $USER;
+        global $DB;
+        $query = "SELECT u.email from {user} u where u.email = ?";
+        $result = $DB->record_exists_sql($query, array($useremail));
 
-        if ($USER->email == $useremail) {
-            return true;
-        }
-        return false;
+
+        return $result;
+//        return $result[0] > 0;
     }
 
 }
