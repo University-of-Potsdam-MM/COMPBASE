@@ -50,9 +50,9 @@ public class SimpleMoodleService {
 		return sendRequest(requestString, MoodleContentResponseList.class);
 	}
 
-	public UserCourseListResponse getMoodleCourseList(String userEmail) {
+	public UserCourseListResponse getMoodleCourseList(String userEmail, String userPassword) {
 		String moodleRestBase = getMoodleCompetenceRestBase();
-		String requestString = MagicStrings.MOODLEURL + moodleRestBase + "local_upcompetence_get_courses_for_user&user=" + userEmail;
+		String requestString = MagicStrings.MOODLEURL + moodleRestBase + "local_upcompetence_get_courses_for_user&user=" + userEmail + "&password=" + userPassword;
 		return sendRequest(requestString, UserCourseListResponse.class);
 	}
 

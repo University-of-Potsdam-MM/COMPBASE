@@ -45,7 +45,8 @@ public class StandaloneContextFactory extends LmsContextFactory {
 		if (super.validUserLoggedIn) {
 			Resource resource = new Resource(
 					Controller.contextFactory.getEvidenceServerURL()
-							+ "/lms/courses/moodle/" + getUser());
+							+ "/lms/courses/moodle/" + getUser() + "/"
+							+ getPassword());
 			resource.get().send(new JsonCallback() {
 
 				@Override

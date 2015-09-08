@@ -112,7 +112,7 @@ public interface EvidenceService {
 	 * @param organization
 	 * @return
 	 */
-	public abstract UserCourseListResponse getCourses(String user, String lmsSystem, String organization);
+	public abstract UserCourseListResponse getCourses(String user, String lmsSystem, String userPassword, String organization);
 
 	/**
 	 * Fügt Kurse zu der Datenbank hinzu, damit UIs zwischen verschiedenen

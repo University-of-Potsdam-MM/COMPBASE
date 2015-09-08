@@ -21,6 +21,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->libdir . "/externallib.php");
+require_once($CFG->dirroot . '/config.php');
+require_once($CFG->libdir . "/accesslib.php");
 
 class local_competence_external extends external_api {#
 
@@ -36,13 +38,18 @@ class local_competence_external extends external_api {#
 
         global $DB, $CFG, $USER;
 
-        $query = 'SELECT c.id, c.fullname FROM {user} u INNER JOIN {user_enrolments} ue ON ue.userid = u.id INNER JOIN {enrol} e ON e.id = ue.enrolid INNER JOIN {course} c ON e.courseid = c.id WHERE u.email = ?';
-        $result = $DB->get_records_sql($query, array($useremail));
-        $mapper = function ($arrayElement) {
-            return array('courseid' => $arrayElement->id, 'name' => $arrayElement->fullname);
-        };
-        $result_mapped = array_map($mapper, $result);
-        return $result_mapped;
+        if ($USER->email == $useremail) {
+
+            $query = 'SELECT c.id, c.fullname FROM {user} u INNER JOIN {user_enrolments} ue ON ue.userid = u.id INNER JOIN {enrol} e ON e.id = ue.enrolid INNER JOIN {course} c ON e.courseid = c.id WHERE u.email = ?';
+            $result = $DB->get_records_sql($query, array($useremail));
+            $mapper = function ($arrayElement) {
+                return array('courseid' => $arrayElement->id, 'name' => $arrayElement->fullname);
+            };
+            $result_mapped = array_map($mapper, $result);
+            return $result_mapped;
+        } else {
+            return array();
+        }
     }
 
     /**
@@ -67,13 +74,14 @@ class local_competence_external extends external_api {#
         return new external_multiple_structure(
                 new external_single_structure(
                 array(
-            'shortname' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),            
+            'shortname' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
             'url' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
             "username" => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
             "userId" => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
             'changed' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
             'course' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
-            'activityTyp' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique')
+            'activityTyp' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
+            'email' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique')
                 )
                 )
         );
@@ -81,29 +89,42 @@ class local_competence_external extends external_api {#
 
     /**
      * returns a list of activities for a user that can be interpreted as evidences
+     * 
+     * The complete list of course activities can only be loaded if you are a teacher!
      *
      * @return array Array of course objects
      * @since Moodle 2.5
      */
     public static function get_evidences_for_course($courseId) {
         global $DB, $CFG, $USER;
-        $query = 'SELECT {log}.*,firstname,lastname,email,lastaccess FROM {log} , {user} INNER JOIN {role_assignments} ra ON ra.userid = {user}.id INNER JOIN {context} ct ON ct.id = ra.contextid INNER JOIN {course} c ON c.id = ct.instanceid INNER JOIN {role} r ON r.id = ra.roleid INNER JOIN {course_categories} cc ON cc.id = c.category WHERE {log}.userid = {user}.id AND {log}.course= ? AND r.id =5 ORDER BY time DESC';
-        $result = $DB->get_records_sql($query, array($courseId));
-        $mapper = function ($arrayElement) {
-            $actual_link = 'http://localhost/moodle'; // to be changed  
-            return array(
-                'shortname' => $arrayElement->module . $arrayElement->info . " am " . $arrayElement->lastaccess,
-                'url' => $actual_link . "/mod/" . $arrayElement->module . "/" . $arrayElement->url,
-                'username' => $arrayElement->firstname . " " . $arrayElement->lastname,
-                "userId" => $arrayElement->userid,
-                'changed' => $arrayElement->lastaccess,
-                'course' => $arrayElement->course,
-                'activityTyp' => $arrayElement->module,
-            );
-            //TODO finish
-        };
-        $result_mapped = array_map($mapper, $result);        
-        return $result_mapped;
+
+
+        $userId = $USER->id;
+        $roles = get_user_roles_in_course($userId, $courseId);
+
+        if (strpos($roles, 'Teacher') !== FALSE) {
+
+            $query = 'SELECT {log}.*,firstname,lastname,email,lastaccess FROM {log} , {user} INNER JOIN {role_assignments} ra ON ra.userid = {user}.id INNER JOIN {context} ct ON ct.id = ra.contextid INNER JOIN {course} c ON c.id = ct.instanceid INNER JOIN {role} r ON r.id = ra.roleid INNER JOIN {course_categories} cc ON cc.id = c.category WHERE {log}.userid = {user}.id AND {log}.course= ? AND r.id =5 ORDER BY time DESC';
+            $result = $DB->get_records_sql($query, array($courseId));
+            $mapper = function ($arrayElement) {
+                $actual_link = 'http://localhost/moodle'; // to be changed  
+                return array(
+                    'shortname' => $arrayElement->module . $arrayElement->info . " am " . $arrayElement->lastaccess,
+                    'url' => $actual_link . "/mod/" . $arrayElement->module . "/" . $arrayElement->url,
+                    'username' => $arrayElement->firstname . " " . $arrayElement->lastname,
+                    "userId" => $arrayElement->userid,
+                    'changed' => $arrayElement->lastaccess,
+                    'course' => $arrayElement->course,
+                    'activityTyp' => $arrayElement->module,
+                    'email' => $arrayElement->email
+                );
+                //TODO finish
+            };
+            $result_mapped = array_map($mapper, $result);
+            return $result_mapped;
+        } else {
+            return array();
+        }
     }
 
     /**
@@ -116,6 +137,7 @@ class local_competence_external extends external_api {#
         return new external_function_parameters(
                 array(
             'user' => new external_value(PARAM_TEXT, 'multilang compatible name'),
+            'password' => new external_value(PARAM_TEXT, 'multilang compatible name'),
                 )
         );
     }
@@ -148,13 +170,12 @@ class local_competence_external extends external_api {#
     }
 
     public static function user_exists($useremail) {
-        global $DB;
-        $query = "SELECT u.email from {user} u where u.email = ?";
-        $result = $DB->record_exists_sql($query, array($useremail));
+        global $DB, $USER;
 
-
-        return $result;
-//        return $result[0] > 0;
+        if ($USER->email == $useremail) {
+            return true;
+        }
+        return false;
     }
 
 }

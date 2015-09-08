@@ -56,11 +56,11 @@ public class EvidenceServiceProxy implements EvidenceService {
 	}
 
 	@Override
-	public UserCourseListResponse getCourses(String user, String lmsSystem, String organization) {
+	public UserCourseListResponse getCourses(String user, String lmsSystem, String userPassword, String organization) {
 		if (!evidenceProviderMap.evidenceMap.containsKey(lmsSystem)) {
 			throw new BadParameterException("Anwendungsplattform " + lmsSystem + " wurde nicht konfiguriert");
 		}
-		return evidenceProviderMap.evidenceMap.get(lmsSystem).getCourses(user, lmsSystem, organization);
+		return evidenceProviderMap.evidenceMap.get(lmsSystem).getCourses(user, lmsSystem, userPassword, organization);
 	}
 
 	@Override

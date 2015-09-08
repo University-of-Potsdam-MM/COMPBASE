@@ -457,11 +457,27 @@ public class CompetenceServiceRestXML extends CompetenceOntologyInterface {
 	 * @param eposCompetences
 	 * @return
 	 */
+	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes(MediaType.APPLICATION_XML)
-	@POST
 	@Path("/learningtemplates/addEpos")
 	public Response importEpos(@BeanParam EPOSTypeWrapper wrapper) {
+
+		EposImporter.importEposCompetences(Arrays.asList(wrapper.getEposCompetences()));
+		return Response.ok("epos templates updated").build();
+	}
+
+	/**
+	 * This Method allows to import Competences in the EPOS-Format
+	 * 
+	 * @param eposCompetences
+	 * @return
+	 */
+	@POST
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_XML)
+	@Path("/learningtemplates/addEpos2")
+	public Response importEpos2(EPOSTypeWrapper wrapper) {
 
 		EposImporter.importEposCompetences(Arrays.asList(wrapper.getEposCompetences()));
 		return Response.ok("epos templates updated").build();

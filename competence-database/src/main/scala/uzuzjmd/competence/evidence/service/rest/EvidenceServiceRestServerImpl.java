@@ -80,12 +80,13 @@ public class EvidenceServiceRestServerImpl implements EvidenceService {
 		return evidenceService.getLMSSystems();
 	}
 
-	@Path("/courses/{lmsSystem}/{userEmail}")
+	@Path("/courses/{lmsSystem}/{userEmail}/{userPassword}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@GET
 	@Override
-	public UserCourseListResponse getCourses(@PathParam("userEmail") String useremail, @PathParam("lmsSystem") String lmsSystem, @QueryParam("organization") String organization) {
-		UserCourseListResponse result = evidenceService.getCourses(useremail, lmsSystem, organization);
+	public UserCourseListResponse getCourses(@PathParam("userEmail") String useremail, @PathParam("lmsSystem") String lmsSystem, @PathParam("userPassword") String userPassword,
+			@QueryParam("organization") String organization) {
+		UserCourseListResponse result = evidenceService.getCourses(useremail, lmsSystem, userPassword, organization);
 		return result;
 	}
 

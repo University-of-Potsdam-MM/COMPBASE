@@ -108,12 +108,12 @@ public class MoodleEvidenceRestServiceImpl extends AbstractEvidenceService {
 	}
 
 	@Override
-	public UserCourseListResponse getCourses(String user, String lmsSystem, String organization) {
+	public UserCourseListResponse getCourses(String user, String lmsSystem, String userPassword, String organization) {
 		if (!LMSSystems.moodle.toString().equals(lmsSystem)) {
 			return new UserCourseListResponse();
 		}
 		SimpleMoodleService simpleService = new SimpleMoodleService(adminLogin, adminLoginPassword);
-		UserCourseListResponse result = simpleService.getMoodleCourseList(user);
+		UserCourseListResponse result = simpleService.getMoodleCourseList(user, userPassword);
 		return result;
 	}
 
