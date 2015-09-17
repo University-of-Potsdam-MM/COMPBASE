@@ -67,12 +67,6 @@
 					<h:outputText id="selectedLearningProject"
 						value="Lernprojekte : #{templateCompetenceView.learnProject}" />
 				</h2>
-				
-				<p:tree value="#{templateCompetenceView.root}" var="node" dynamic="true" orientation="horizontal">
-			        <p:treeNode>
-			            <h:outputText value="#{node}" />
-			        </p:treeNode>
-			    </p:tree>
 			    
 			    
 				<ui:repeat var="catchWord" value="#{templateCompetenceView.catchWords}" >
@@ -80,8 +74,19 @@
 <!-- 					<p:inplace id="ajax" editor="true"> -->
 <!-- 			            <p:inputText value="#{catchWord} " required="true" label="text" /> -->
 <!-- 			        </p:inplace> -->
-			        
-			        <ui:repeat var="competence" value="#{templateCompetenceView.competencen.get(catchWord)}" >
+
+						<ui:repeat var="tree" value="#{templateCompetenceView.treeNodeMap.get(catchWord)}" >
+							tree
+							<p:tree value="#{tree}" var="node" 
+							dynamic="true" orientation="horizontal">
+								<p:treeNode>
+									<h:outputText value="#{node}" />
+								</p:treeNode>
+							</p:tree>
+						</ui:repeat>
+						
+						
+						<ui:repeat var="competence" value="#{templateCompetenceView.competencen.get(catchWord)}" >
 			        	<h:outputText value=" #{competence}"/>
 			        	(<p:commandLink onclick="PF('branchCompetenceDialog').show()"
 			        		actionListener="#{templateCompetenceView.selecteCompetence(competence)}">

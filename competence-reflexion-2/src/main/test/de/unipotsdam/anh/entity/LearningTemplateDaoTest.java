@@ -2,13 +2,13 @@ package de.unipotsdam.anh.entity;
 
 import org.junit.Test;
 
-import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
+import de.unipotsdam.anh.reflexion.TemplateCompetenceView;
 
 public class LearningTemplateDaoTest {
 
-	@Test
+//	@Test
 	public void testGetLearningProjectTemplate() {
 		System.out.println("##### Test getLearningProjectTemplate #####");
 		LearningTemplateResultSet result = LearningTemplateDao.getLearningProjectTemplate("TestLernprojekt");
@@ -35,5 +35,11 @@ public class LearningTemplateDaoTest {
 		for(String s : LearningTemplateDao.findAll().getData()) {
 			System.out.println(s);
 		}
+	}
+	
+	@Test
+	public void testtree() {
+		TemplateCompetenceView view = new TemplateCompetenceView();
+		view.init();
 	}
 }
