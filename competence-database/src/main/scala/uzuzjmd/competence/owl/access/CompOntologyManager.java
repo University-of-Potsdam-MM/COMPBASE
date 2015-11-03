@@ -259,6 +259,10 @@ public class CompOntologyManager {
 						CompOntClass.SelfAssessment,
 						CompOntClass.User,
 						CompObjectProperties.AssessmentOfCompetence);
+		getUtil().createObjectProperty(
+				CompOntClass.EvidenceActivity,
+				CompOntClass.Competence,
+				CompObjectProperties.ActivityForComptence);
 		// getM().getObjectProperty(
 		// MagicStrings.PREFIX + CompObjectProperties.SimilarTo)
 		// .addProperty(RDF.type, OWL2.ReflexiveProperty);

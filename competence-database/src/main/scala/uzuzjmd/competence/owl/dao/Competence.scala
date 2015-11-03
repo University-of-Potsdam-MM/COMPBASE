@@ -134,6 +134,10 @@ class Competence(compManager: CompOntologyManager, identifierlocal: String, val 
     addSuperCompetencesToCourse(this, course)
   }
 
+  def getActivitiesFor(): List[EvidenceActivity] = {
+    return getAssociatedStandardDaosAsDomain(CompObjectProperties.ActivityForComptence, classOf[EvidenceActivity])
+  }
+
   private def addSuperCompetencesToCourse(competence: Competence, course: CourseContext) {
     if (competence.hasSuperClass) {
       val superCompetences = competence.listSuperClasses(classOf[Competence]).filterNot { x => x.identifier.equals("Competence") }.filterNot { x => x.identifier.equals("Resource") }

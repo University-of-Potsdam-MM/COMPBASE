@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import scala.NotImplementedError;
 import uzuzjmd.competence.mapper.gui.read.Ont2Catchwords;
 import uzuzjmd.competence.mapper.gui.read.Ont2CompetenceGraph;
 import uzuzjmd.competence.mapper.gui.read.Ont2CompetenceLinkMap;
@@ -21,7 +22,9 @@ import uzuzjmd.competence.mapper.gui.read.Ont2Operator;
 import uzuzjmd.competence.mapper.gui.write.HierarchieChangesToOnt;
 import uzuzjmd.competence.mapper.rest.read.GetProgressMInOnt;
 import uzuzjmd.competence.mapper.rest.read.GetRequiredCompetencesInOnt;
+import uzuzjmd.competence.mapper.rest.read.Ont2ActivitiesForCompetence;
 import uzuzjmd.competence.mapper.rest.write.AbstractEvidenceLink2Ont;
+import uzuzjmd.competence.mapper.rest.write.ActivityForCompetence2Ont;
 import uzuzjmd.competence.mapper.rest.write.Comment2Ont;
 import uzuzjmd.competence.mapper.rest.write.Competence2Ont;
 import uzuzjmd.competence.mapper.rest.write.CreatePrerequisiteInOnt;
@@ -41,6 +44,8 @@ import uzuzjmd.competence.service.rest.model.dto.CourseData;
 import uzuzjmd.competence.service.rest.model.dto.LinkValidationData;
 import uzuzjmd.competence.service.rest.model.dto.PrerequisiteData;
 import uzuzjmd.competence.service.rest.model.dto.UserData;
+import uzuzjmd.competence.shared.dto.Activity;
+import uzuzjmd.competence.shared.dto.CompetenceForActivityData;
 import uzuzjmd.competence.shared.dto.CompetenceLinksMap;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.HierarchieChangeSet;
@@ -665,6 +670,60 @@ public class CompetenceServiceRestJSON extends
 		String resultMessage = Competence2Ont
 				.convert(competenceData);
 		return Response.ok(resultMessage).build();
+	}
+
+	@Consumes(MediaType.APPLICATION_JSON)
+	@POST
+	@Path("/activityForCompetence/add")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addActivityForCompetenceRelationship(
+			@QueryParam("competence") String competence,
+			Activity activity) {
+
+		CompetenceForActivityData changes = new CompetenceForActivityData(
+				competence, activity);
+		ActivityForCompetence2Ont.convert(changes);
+
+		return Response
+				.ok("AktivityForCompetenceRelationship created")
+				.build();
+	}
+
+	@Consumes(MediaType.APPLICATION_JSON)
+	@POST
+	@Path("/activityForCompetence/delete")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteActivityForCompetenceRelationship(
+			@QueryParam("competence") String competence,
+			Activity activity) {
+
+		/**
+		 * TODO implement
+		 */
+		throw new NotImplementedError();
+
+		// return Response
+		// .ok("AktivityForCompetenceRelationship created")
+		// .build();
+	}
+
+	@Consumes(MediaType.APPLICATION_JSON)
+	@GET
+	@Path("/activityForCompetence/get")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Activity[] getActivitesForCompetence(
+			@QueryParam("competence") String competence) {
+
+		List<Activity> result = Ont2ActivitiesForCompetence
+				.convert(competence);
+
+		return result.toArray(new Activity[0]);
+
+		/**
+		 * TODO implement
+		 */
+		// throw new NotImplementedError();
+
 	}
 
 	private Response handleLinkValidation(String linkId,

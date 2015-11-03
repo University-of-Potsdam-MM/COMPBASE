@@ -4,6 +4,7 @@ import uzuzjmd.competence.owl.ontology.CompOntClass
 import uzuzjmd.competence.owl.access.CompOntologyManager
 import uzuzjmd.competence.owl.access.CompOntologyAccess
 import uzuzjmd.competence.owl.dao.exceptions.IndividualNotFoundException
+import uzuzjmd.competence.owl.ontology.CompObjectProperties
 
 case class EvidenceActivity(comp: CompOntologyManager, val url: String, val printableName: String = null) extends CompetenceOntologyDao(comp, CompOntClass.EvidenceActivity, url) {
 
@@ -32,5 +33,9 @@ case class EvidenceActivity(comp: CompOntologyManager, val url: String, val prin
         return this
     }
 
+  }
+
+  def addCompetenceFor(dao: Competence) {
+    createEdgeWith(CompObjectProperties.ActivityForComptence, dao);
   }
 }
