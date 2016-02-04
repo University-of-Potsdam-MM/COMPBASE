@@ -19,10 +19,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by carl on 06.01.16.
@@ -120,13 +117,17 @@ public class Model {
 
     public void stichwortResultToCsv(String filepath) throws IOException {
         logger.debug("Entering stichwortResultToCsv with filepath:" + filepath);
-        List<String> lines = new ArrayList<String>();
+        Collection<String> lines = new Vector<>();
         lines.add("Stichwort" + delimiter + "URL" + delimiter + "SolrScore");
         for (String key: stichwortResult.keySet()) {
             int sizeOfStichwortResult = (int) stichwortResult.get(key).getNumFound();
-            for (int i = 0; i < sizeOfStichwortResult; i++) {
-                SolrDocument doc = stichwortResult.get(key).get(i);
-                lines.add(key + delimiter + doc.getFieldValue("id") + delimiter + doc.getFieldValue("score"));
+            for (int i = 0; i < sizeOfStichwortResult && i<10000; i++) {
+                try {
+                    SolrDocument doc = stichwortResult.get(key).get(i);
+                    lines.add(key + delimiter + doc.getFieldValue("id") + delimiter + doc.getFieldValue("score"));
+                } catch (IndexOutOfBoundsException e) {
+                     logger.error("more then 10000 elements found");
+                }
             }
         }
         Path file = Paths.get(filepath);
@@ -144,11 +145,11 @@ public class Model {
                 "Depth" + delimiter + "Lat" + delimiter + "Lon");
         for (String key: varMeta.getElements().keySet()) {
             int sizeOfStichwortResult = (int) varMeta.getElements().get(key).documentList.getNumFound();
-            for (int i = 0; i < sizeOfStichwortResult; i++) {
+            for (int i = 0; i < sizeOfStichwortResult && i<10000; i++) {
                 SolrDocument doc = varMeta.getElements().get(key).documentList.get(i);
 
                 //Get Domain
-                URI uri = new URI((String) doc.getFieldValue("url"));
+                URI uri = new URI(((String) doc.getFieldValue("url")).replace(" ", ""));
                 String domain = uri.getHost();
                 String[] tempStrings = domain.split("\\.");
                 if (tempStrings.length >= 0) {
