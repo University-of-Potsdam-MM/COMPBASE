@@ -18,7 +18,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by dehne on 14.12.2015.
   */
-object CompetenceServiceRestJSONTest {
+object CompetenceServiceImplTest {
   @BeforeClass
   @throws(classOf[Exception])
   def setUpBeforeClass {
@@ -29,8 +29,8 @@ object CompetenceServiceRestJSONTest {
 /**
   * TEST CLASS for the JSON interface
   */
-class CompetenceServiceRestJSONTest extends WriteTransactional[Any] with Logging {
-  private var jsonService: CompetenceServiceRestJSON = null
+class CompetenceServiceImplTest extends WriteTransactional[Any] with Logging {
+  private var jsonService: CompetenceServiceImpl = null
 
   val assertEmptyDatabse = true;
 
@@ -39,7 +39,7 @@ class CompetenceServiceRestJSONTest extends WriteTransactional[Any] with Logging
   @Before
   @throws(classOf[Exception])
   def setUp {
-    this.jsonService = new CompetenceServiceRestJSON
+    this.jsonService = new CompetenceServiceImpl
   }
 
   @After

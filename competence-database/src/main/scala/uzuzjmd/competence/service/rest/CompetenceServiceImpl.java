@@ -1,5 +1,6 @@
 package uzuzjmd.competence.service.rest;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uzuzjmd.competence.main.EposImporter;
 import uzuzjmd.competence.mapper.rest.read.*;
 import uzuzjmd.competence.mapper.rest.write.*;
@@ -17,7 +18,6 @@ import uzuzjmd.competence.shared.dto.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,9 +26,9 @@ import java.util.List;
  * Root resource (exposed at "competences" path)
  */
 @Path("/competences")
-public class CompetenceServiceRestJSON {
+public class CompetenceServiceImpl {
 
-    public CompetenceServiceRestJSON() {
+    public CompetenceServiceImpl() {
         DBInitializer.init();
     }
 
@@ -911,4 +911,55 @@ public class CompetenceServiceRestJSON {
     }
 
 
+    /**
+     * returns the recommended courses for the user who is interested in the competence given
+     * if no competence this defaults to getCompetenceRecommendations->getCourseRecommendationsForAll
+     * @param user
+     * @param competence
+     * @return
+     */
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @POST
+    @Path("/recommendations/courses/{userId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public RecommendedCourseResultSet getCourseRecommendations(@PathParam("userId") String user, @QueryParam("competence") String competence) {
+
+        // TODO implement
+        throw new NotImplementedException();
+    }
+
+    /**
+     * returns the recommended activities for the user who is interested in the competence given
+     * if no competence this defaults to getCompetenceRecommendations->getActivityRecommendationsForAll
+     * @param user
+     * @param competence
+     * @return
+     */
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @POST
+    @Path("/recommendations/activities/{userId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public StringList getActivityRecommendations(@PathParam("userId") String user, @QueryParam("competence") String competence) {
+
+        // TODO implement
+        throw new NotImplementedException();
+    }
+
+    /**
+     * get competences
+     * a -> by learning trail
+     * b -> by learning template
+     * c -> by catchwords
+     * @param user
+     * @return
+     */
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @POST
+    @Path("/recommendations/competences/{userId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public StringList getCompetenceRecommendations(@PathParam("userId") String user, @QueryParam("catchwords") List<String> catchwords, @QueryParam("operator") String operator, @QueryParam("textFilter") String textFilter) {
+
+        // TODO implement
+        throw new NotImplementedException();
+    }
 }

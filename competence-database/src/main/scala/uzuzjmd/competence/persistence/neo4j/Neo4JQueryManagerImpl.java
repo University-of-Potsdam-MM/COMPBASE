@@ -1,6 +1,7 @@
 package uzuzjmd.competence.persistence.neo4j;
 
 import com.google.common.collect.Sets;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uzuzjmd.competence.exceptions.DataFieldNotInitializedException;
 import uzuzjmd.competence.persistence.dao.*;
 import uzuzjmd.competence.persistence.ontology.Edge;
@@ -291,13 +292,29 @@ public class Neo4JQueryManagerImpl extends Neo4JQueryManager {
     public HashSet<Competence> getSuggestedCompetenceRequirements(String competenceId, Class<Competence> competenceClass, LearningProjectTemplate learningProject) throws Exception {
         String query = "MATCH (b:LearningProjectTemplate{id:'"+learningProject.getId()+"'})-[r1:LearningProjectTemplateOf]->(c) MATCH (c:Competence)-[r2:SuggestedCompetencePrerequisiteOf]->(a:Competence{id:'"+competenceId+"'}) return c.id";
         ArrayList<String> result = issueNeo4JRequestStrings(query);
+        return getCompetencesFromResultSet(learningProject, result);
+    }
+
+    private HashSet<Competence> getCompetencesFromResultSet(LearningProjectTemplate learningProject, ArrayList<String> result) {
         if (result == null || result.isEmpty()) {
             return new HashSet<>();
         }
         HashSet<Competence> result2 = new HashSet<>();
         for (String s : result) {
-            result2.add(new Competence(s, learningProject));
+            if (learningProject != null) {
+                result2.add(new Competence(s, learningProject));
+            } else {
+                result2.add(new Competence(s));
+            }
         }
-         return result2;
+        return result2;
+    }
+
+    public HashSet<Competence> getRecommendedCompetencesForUser(String user) throws Exception {
+        String query1 = "MATCH (a:SelfAssessment)-[r1:AssessmentOfUser]->(n:User{id:"+user+"}) MATCH (a)-[r2:AssessmentOfCompetence]->(b) MATCH (b)-[r3:SuggestedCompetencePrerequisite]->(c) WHERE a.assessmentIndex = '3' OR a.assessmentIndex = '4' RETURN c.id LIMIT 25";
+        String query2 = "MATCH (l:LearningProjectTemplate)-[r2:LearningProjectTemplateOf]->(a:Competence) MATCH (u:User{id:"+user+"})-[r3:UserOfLearningProjectTemplate]->(l) MATCH (s:SelfAssessment)-[r4:AssessmentOfCompetence]->(a) MATCH (s)-[r1:AssessmentOfUser]->(u) WHERE NOT(s.assessmentIndex='1') AND NOT(s.assessmentIndex='2')  return a.id";
+        // add more queries here
+        ArrayList<String> result = issueNeo4JRequestStrings(query1, query2);
+        return getCompetencesFromResultSet(null, result);
     }
 }

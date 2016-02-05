@@ -9,7 +9,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import uzuzjmd.competence.config.MagicStrings;
 import uzuzjmd.competence.evidence.service.rest.EvidenceServiceRestServerImpl;
-import uzuzjmd.competence.service.rest.CompetenceServiceRestJSON;
+import uzuzjmd.competence.service.rest.CompetenceServiceImpl;
 import uzuzjmd.competence.util.CrossOriginResourceSharingFilter;
 
 import javax.ws.rs.ProcessingException;
@@ -42,7 +42,7 @@ public class RestServer {
                 .println("plz configure evidenceserver.properties");
 
         ResourceConfig resourceConfig = new ResourceConfig(
-                CompetenceServiceRestJSON.class,
+                CompetenceServiceImpl.class,
                 EvidenceServiceRestServerImpl.class);
         resourceConfig.register(JacksonFeature.class);
 

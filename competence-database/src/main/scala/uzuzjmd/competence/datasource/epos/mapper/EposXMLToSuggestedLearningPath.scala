@@ -26,7 +26,7 @@ object EposXMLToSuggestedLearningPath {
     val competences: mutable.Buffer[Competence] = x.getDESCRIPTOR().asScala.map(EposXML2FilteredCSVCompetence.descriptorSetType2Id).map(x => new Competence(x, false).persist()).map(x => x.asInstanceOf[Competence])
     competences.foreach(competence => competence.addCatchword(new Catchword(EposXML2FilteredCSVCompetence.identifier2Definition(competence.getDefinition))));
     val learningProjectTemplate = new LearningProjectTemplate(templateName, competences.toList.asJava)
-    learningProjectTemplate.persist
+    learningProjectTemplate.persistMore()
   }
 
   def convertLevelsToOWLRelations2(descriptorSetType: List[DESCRIPTORType]) {
