@@ -1,4 +1,4 @@
-# DUCKBASE 
+# COMPBASE
 
 ## Competence Server Project in Ubuntu/Debian
 ### Install
